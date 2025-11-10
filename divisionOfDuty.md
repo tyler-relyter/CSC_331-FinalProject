@@ -1,5 +1,5 @@
 Tyler - TileMap and collisions
 
-Patrick - Enemy class
+Patrick - Enemy class and asset
 
 Greg - Player animations
