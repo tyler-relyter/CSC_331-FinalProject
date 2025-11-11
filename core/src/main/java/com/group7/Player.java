@@ -1,43 +1,77 @@
 package com.group7;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 
 public class Player {
     //all the stuff the player can have as properties.
-    private Sprite sprite;
-    private int width;
-    private int height;
+    private float width;
+    private float height;
     private int health;
-    private Vector2 velocity;
-    private float speed = 200f;
-    private int damage;
+    private final Vector2 velocity;
     public float x;
     public float y;
 
+    // animation fields
+    private Animation<TextureRegion> idleAnimation;
+    private Animation<TextureRegion> walkAnimation;
+    private Animation<TextureRegion> attackAnimation;
+    private float stateTime;
+    private String direction;
 
-    public Player(Texture texture, float x, float y){
+    private Array<Texture> animationTextures;
+
+    public Player(float x, float y){
         // sets all the initial values when you create the player object
-        this.sprite = new Sprite(texture); // makes it into a sprite
         this.x = x;
         this.y = y;
-        this.width = 20;
-        this.height = 20;
-        this.damage = 10;
-        this.velocity = new Vector2(); // this is for movement in libGDX
-
-        sprite.setSize(width, height); // sizes the sprite of the player
+        this.velocity = new Vector2();// this is for movement in libGDX
+        this.stateTime = 0f;
+        this.direction = "down";
+        this.animationTextures = new Array<>();
+        //loadAnimations();
     }
 
-    // this handles when you press up down left or right on the arrow keys.
+    private void loadAnimations() {
+        //idle animation
+        Array<TextureRegion> idleFrames = new Array<>();
+        for (int i = 0; i <= 5; i++){ //iterate through all the files and grab each one
+            Texture frameTexture = new Texture(Gdx.files.internal("Characters/IdleDown/idle_down_0"+i+".png"));
+            animationTextures.add(frameTexture); //add the textures to the animation array
+            idleFrames.add(new TextureRegion(frameTexture)); // add the images as to the texture region for idle animation
+        }
+        idleAnimation = new Animation<>(0.1f, idleFrames, Animation.PlayMode.LOOP); // create the idle animation with the frames.
+
+        //walk animation
+        for(int i = 1; i <= )
+
+
+
+        //Set player size
+        this.width = 10;
+        this.height = 10;
+    }
+
+    public void draw(SpriteBatch spriteBatch){
+        Animation<TextureRegion> currentAnimation;
+
+        // decide which animation to use
+        if (velocity.isZero()) {
+            currentAnimation = idleAnimation;
+        } else {
+            currentAnimation = walkAnimation;
+        }
+    }
+
     public void update(float delta, float worldWidth, float worldHeight){
-        handleInput(delta);
+        handleInput();
         // updates position
         x+= velocity.x * delta; // multiply it by delta so it doesn't fuck up with different fps's
         y+= velocity.y * delta;
@@ -46,31 +80,14 @@ public class Player {
         x = MathUtils.clamp(x, 0, worldWidth - width);
         y = MathUtils.clamp(y, 0, worldHeight - height);
 
-        //update the sprites position
-        sprite.setPosition(x, y);
+        stateTime += delta;
+        //because this is called in the main render, it continuously updates the char position (when you move him)
     }
 
-    private void handleInput(float delta){
+    private void handleInput(){
         velocity.set(0, 0); //this sets the initial velocity to nothing until you press a key
-
-        //basically when you press a key, it moves the player forward or back on x and y axis allowing for movement.
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)){
-            velocity.y = speed;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-            velocity.y = -speed;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-            velocity.x = -speed;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-            velocity.x = speed;
-        }
     }
 
-    public void draw(SpriteBatch batch){
-        sprite.draw(batch); // updates the draw so you are able to render the player.
-    }
 
     public float getBottomY(){
         return y; // the bottom of the player sprite

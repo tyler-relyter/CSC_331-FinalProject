@@ -64,7 +64,7 @@ public class MainEntry extends Game {
 
 
         // create instance of new player at location 250,250
-        player = new Player(playerTexture, worldWidth / 2, worldHeight / 2);
+        player = new Player(worldWidth / 2, worldHeight / 2);
 
 //        createStaticObjects();
     }
@@ -83,7 +83,6 @@ public class MainEntry extends Game {
         spriteBatch.begin(); // need this to start drawing sprites
 
         background.draw(spriteBatch); // applies background to world
-        player.draw(spriteBatch); // applies player to world
 
         spriteBatch.end(); // when you are dont drawing sprites
     }
