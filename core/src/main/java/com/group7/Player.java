@@ -36,7 +36,7 @@ public class Player {
         this.stateTime = 0f;
         this.direction = "down";
         this.animationTextures = new Array<>();
-        //loadAnimations();
+        loadAnimations();
     }
 
     private void loadAnimations() {
@@ -49,14 +49,13 @@ public class Player {
         }
         idleAnimation = new Animation<>(0.1f, idleFrames, Animation.PlayMode.LOOP); // create the idle animation with the frames.
 
-        //walk animation
-        for(int i = 1; i <= )
+
 
 
 
         //Set player size
-        this.width = 10;
-        this.height = 10;
+        this.width = 50;
+        this.height = 50;
     }
 
     public void draw(SpriteBatch spriteBatch){
@@ -68,6 +67,12 @@ public class Player {
         } else {
             currentAnimation = walkAnimation;
         }
+
+        //grab the key frame from the active animation to put on the screen
+        TextureRegion currentFrame = currentAnimation.getKeyFrame(stateTime, true);
+
+        //draw the frame to the screen when draw method is called.
+        spriteBatch.draw(currentFrame, x, y, width, height);
     }
 
     public void update(float delta, float worldWidth, float worldHeight){
@@ -97,4 +102,10 @@ public class Player {
         return new Rectangle(x,y,width,height); // the rectangle of the player
     }
 
+    public void dispose(){
+        // dispose of all textures loaded by this class so it doesn't cause a memory leak.
+        for (Texture texture: animationTextures){
+            texture.dispose();
+        }
+    }
 }

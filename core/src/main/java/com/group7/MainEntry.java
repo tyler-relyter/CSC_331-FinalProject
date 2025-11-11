@@ -32,7 +32,6 @@ public class MainEntry extends Game {
 
     // Textures
     private Texture backgroundTexture;
-    private Texture playerTexture;
 
     // Game Objects
     private Sprite background;
@@ -83,14 +82,13 @@ public class MainEntry extends Game {
         spriteBatch.begin(); // need this to start drawing sprites
 
         background.draw(spriteBatch); // applies background to world
-
-        spriteBatch.end(); // when you are dont drawing sprites
+        player.draw(spriteBatch);
+        spriteBatch.end(); // when you are done drawing sprites
     }
 
     //this loads in all the textures for the objects, player and background.
     private void loadTextures(){
         backgroundTexture = new Texture("Maps/background.png");
-        playerTexture = new Texture("Characters/Player.png");
     }
 
     private void createBackground(){
@@ -119,7 +117,6 @@ public class MainEntry extends Game {
         spriteBatch.dispose();
         font.dispose();
         backgroundTexture.dispose();
-        playerTexture.dispose();
     }
 
 //    private void createStaticObjects(){
