@@ -102,8 +102,8 @@ public class MainEntry extends Game {
 
     private void updateCamera(){
          //make camera follow player
-         camera.position.x = player.x;
-         camera.position.y = player.y;
+         camera.position.x = player.x + 5;
+         camera.position.y = player.y + 5;
 
     }
 
