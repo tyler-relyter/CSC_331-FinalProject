@@ -142,13 +142,49 @@ public class Player {
         }
         walkRightAnimation = new Animation<>(0.1f, walkRightFrames, Animation.PlayMode.LOOP);
 
+        //Attack up animation
+        Array<TextureRegion> attackUpFrames = new Array<>();
+        for (int i = 0; i <=3; i++){
+            Texture frameTexture = new Texture(Gdx.files.internal("Characters/AttackUp/attack_up_0"+i+".png"));
+            attackAnimationTextures.add(frameTexture);
+            attackUpFrames.add(new TextureRegion(frameTexture));
+        }
+        attackUpAnimation = new Animation<>(0.1f, attackUpFrames, Animation.PlayMode.LOOP);
+
+        //Attack down animation
+        Array<TextureRegion> attackDownFrames = new Array<>();
+        for (int i = 0; i <=3; i++){
+            Texture frameTexture = new Texture(Gdx.files.internal("Characters/AttackDown/attack_down_0"+i+".png"));
+            attackAnimationTextures.add(frameTexture);
+            attackDownFrames.add(new TextureRegion(frameTexture));
+        }
+        attackDownAnimation = new Animation<>(0.1f, attackDownFrames, Animation.PlayMode.LOOP);
+
+        // Attack left animation
+        Array<TextureRegion> attackLeftFrames = new Array<>();
+        for (int i = 0; i <=3; i++){
+            Texture frameTexture = new Texture(Gdx.files.internal("Characters/AttackLeft/attack_left_0"+i+".png"));
+            attackAnimationTextures.add(frameTexture);
+            attackLeftFrames.add(new TextureRegion(frameTexture));
+        }
+        attackLeftAnimation = new Animation<>(0.1f, attackLeftFrames, Animation.PlayMode.LOOP);
+
+        //Attack right animation
+        Array<TextureRegion> attackRightFrames = new Array<>();
+        for (int i = 0; i <=3; i++){
+            Texture frameTexture = new Texture(Gdx.files.internal("Characters/AttackRight/attack_right_0"+i+".png"));
+            attackAnimationTextures.add(frameTexture);
+            attackRightFrames.add(new TextureRegion(frameTexture));
+        }
+        attackRightAnimation = new Animation<>(0.1f, attackRightFrames, Animation.PlayMode.LOOP);
+
     }
 
     public void draw(SpriteBatch spriteBatch){
         Animation<TextureRegion> currentAnimation = idleDownAnimation; // default animation when game loads.
 
         // decide which animation to use
-        if (!isWalking) { // if the character is not moving:
+        if (!isWalking && !isAttacking) { // if the character is not moving:
             if (direction.equals("down")){
                 currentAnimation = idleDownAnimation;
             }
@@ -161,7 +197,7 @@ public class Player {
             if (direction.equals("right")){
                 currentAnimation = idleRightAnimation;
             }
-        } else {
+        } else if (isWalking && !isAttacking){
             if (direction.equals("down")){
                 currentAnimation = walkDownAnimation;
             }
@@ -174,8 +210,20 @@ public class Player {
             if (direction.equals("right")){
                 currentAnimation = walkRightAnimation;
             }
+        } else if (!isWalking && isAttacking){
+            if (direction.equals("down")){
+                currentAnimation = attackDownAnimation;
+            }
+            if (direction.equals("up")) {
+                currentAnimation = attackUpAnimation;
+            }
+            if (direction.equals("left")){
+                currentAnimation = attackLeftAnimation;
+            }
+            if (direction.equals("right")){
+                currentAnimation = attackRightAnimation;
+            }
         }
-
 
         //grab the key frame from the active animation to put on the screen
         TextureRegion currentFrame = currentAnimation.getKeyFrame(stateTime, true);
@@ -195,7 +243,6 @@ public class Player {
         this.position.y = MathUtils.clamp(this.position.y, 0, worldHeight - height);
 
         stateTime += delta; //this adds delta time(game time) to the animation time.
-        System.out.println(this.isWalking);
         //because this is called in the main render, it continuously updates the char position (when you move him)
     }
 
