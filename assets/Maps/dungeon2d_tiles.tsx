@@ -197,6 +197,9 @@
   <image source="Tiles/tile_0131.png" width="16" height="16"/>
  </tile>
  <tile id="62">
+  <properties>
+   <property name="blocked" type="bool" value="true"/>
+  </properties>
   <image source="Tiles/tile_0000.png" width="16" height="16"/>
  </tile>
  <tile id="63">
@@ -249,19 +252,19 @@
  </tile>
  <tile id="71">
   <properties>
-   <property name="blocked" type="bool" value="false"/>
+   <property name="blocked" type="bool" value="true"/>
   </properties>
   <image source="Tiles/tile_0009.png" width="16" height="16"/>
  </tile>
  <tile id="72">
   <properties>
-   <property name="blocked" type="bool" value="false"/>
+   <property name="blocked" type="bool" value="true"/>
   </properties>
   <image source="Tiles/tile_0010.png" width="16" height="16"/>
  </tile>
  <tile id="73">
   <properties>
-   <property name="blocked" type="bool" value="false"/>
+   <property name="blocked" type="bool" value="true"/>
   </properties>
   <image source="Tiles/tile_0011.png" width="16" height="16"/>
  </tile>
@@ -318,19 +321,19 @@
  </tile>
  <tile id="83">
   <properties>
-   <property name="blocked" type="bool" value="false"/>
+   <property name="blocked" type="bool" value="true"/>
   </properties>
   <image source="Tiles/tile_0021.png" width="16" height="16"/>
  </tile>
  <tile id="84">
   <properties>
-   <property name="blocked" type="bool" value="false"/>
+   <property name="blocked" type="bool" value="true"/>
   </properties>
   <image source="Tiles/tile_0022.png" width="16" height="16"/>
  </tile>
  <tile id="85">
   <properties>
-   <property name="blocked" type="bool" value="false"/>
+   <property name="blocked" type="bool" value="true"/>
   </properties>
   <image source="Tiles/tile_0023.png" width="16" height="16"/>
  </tile>
@@ -420,19 +423,19 @@
  </tile>
  <tile id="107">
   <properties>
-   <property name="blocked" type="bool" value="false"/>
+   <property name="blocked" type="bool" value="true"/>
   </properties>
   <image source="Tiles/tile_0045.png" width="16" height="16"/>
  </tile>
  <tile id="108">
   <properties>
-   <property name="blocked" type="bool" value="false"/>
+   <property name="blocked" type="bool" value="true"/>
   </properties>
   <image source="Tiles/tile_0046.png" width="16" height="16"/>
  </tile>
  <tile id="109">
   <properties>
-   <property name="blocked" type="bool" value="false"/>
+   <property name="blocked" type="bool" value="true"/>
   </properties>
   <image source="Tiles/tile_0047.png" width="16" height="16"/>
  </tile>

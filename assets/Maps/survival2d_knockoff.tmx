@@ -3,29 +3,89 @@
  <tileset firstgid="1" source="dungeon2d_tiles.tsx"/>
  <layer id="1" name="Ground" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJzFlckOgkAMhudmfCsRl4sC0YvKwSMhLoB4MD69ndgmY1NmQQ2HLx07tX/aqbZSSlUDUAA5WhPtewrxMbC3MAMeQj6Tp3FeABfgiueC6dZoE2ACRAJTYGXoUj0b9lnnvQGNYRvmu7N6E8y9FkiYrq3e0Heh3NxfM90t1rcEzmhz9PvoUn9LtCmQdcTSne7VEe2JWe1v2fdKiz7xwPeS7jYBPZTmkc8v9/n2yMZEfc4k7yF/T973vkg5febIt86u2l05Q3T71vtrXdtb+OrSfI2EmLFx7zOHcYCuq27fOFsPy4F0ffPVjriuWQ7V3anu/Xf4ol7b7zcF5ur930I2Yr7sD3127Tbab66ctLdsvTP7J+1msnRuA3K+ADc+7Po=
+   eJzFVU0PgjAM3c34r8DPi4LBi8rBIyF+oXgw/nq72Caz2boNMR5eOrrxXvpWaKWUqhx4Ai4d8BA4iVfH0rJXOnTHgK2ASYSuxgxwApxxzettMGaABJBaMAIsDF2qp2DPmvcGuBrxynJ3Vm+G3EsLMqbb5/0RN883THeN9c0BR4wl5kN0yd8aYw5YOc7SnvZqj/HAos637L1a0Dd7tXDsFREe2vqR9y/PhXokIVGfPck95PfJfe8KG2dIH4XW6ardxxmj27XevnWluwjVpf4aWM4Mjf2QPhxH6PrqDj0neVj/STeUr/Gcc/VyrO5Gueff7ot6pe83B0zV+99CMWW51Q989s02mm8+Tppbknemf7bZTJHWbQTnC08N7Kk=
   </data>
  </layer>
- <objectgroup id="2" name="Objects">
+ <objectgroup id="2" name="Object">
   <object id="11" gid="28" x="207.512" y="239.302" width="16" height="16"/>
   <object id="12" gid="35" x="214.992" y="237.917" width="14.338" height="13.7839"/>
   <object id="13" name="spider" type="enemy" gid="53" x="37.7064" y="241.241" width="16" height="16"/>
   <object id="14" name="cyclops" type="enemy" gid="40" x="403.911" y="254.26" width="16" height="16"/>
-  <object id="15" gid="7" x="222.922" y="111.708" width="16" height="16"/>
-  <object id="16" gid="7" x="79.1143" y="128.854" width="16" height="16"/>
-  <object id="17" gid="7" x="350.413" y="208.778" width="16" height="16"/>
-  <object id="18" gid="8" x="239.515" y="111.708" width="16" height="16"/>
-  <object id="19" gid="8" x="256.109" y="111.708" width="16" height="16"/>
-  <object id="20" gid="8" x="272.149" y="111.708" width="16" height="16"/>
-  <object id="21" gid="8" x="367.006" y="208.78" width="16" height="16"/>
-  <object id="22" gid="8" x="384.153" y="208.78" width="16" height="16"/>
-  <object id="23" gid="8" x="400.746" y="208.78" width="16" height="16"/>
-  <object id="24" gid="8" x="417.27" y="208.78" width="16" height="16"/>
-  <object id="25" gid="8" x="433.103" y="208.78" width="16" height="16"/>
-  <object id="26" gid="8" x="95.75" y="128.85" width="16" height="16"/>
-  <object id="27" gid="9" x="289.018" y="111.71" width="16" height="16"/>
-  <object id="28" gid="9" x="449.143" y="208.78" width="16" height="16"/>
-  <object id="29" gid="9" x="113.024" y="128.85" width="16" height="16"/>
+  <object id="15" type="gate" gid="7" x="222.922" y="111.708" width="16" height="16">
+   <properties>
+    <property name="blocked" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="16" type="gate" gid="7" x="79.1143" y="128.854" width="16" height="16">
+   <properties>
+    <property name="blocked" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="17" type="gate" gid="7" x="350.413" y="208.778" width="16" height="16">
+   <properties>
+    <property name="blocked" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="18" type="gate" gid="8" x="239.515" y="111.708" width="16" height="16">
+   <properties>
+    <property name="blocked" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="19" type="gate" gid="8" x="256.109" y="111.708" width="16" height="16">
+   <properties>
+    <property name="blocked" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="20" type="gate" gid="8" x="272.149" y="111.708" width="16" height="16">
+   <properties>
+    <property name="blocked" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="21" type="gate" gid="8" x="367.006" y="208.78" width="16" height="16">
+   <properties>
+    <property name="blocked" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="22" type="gate" gid="8" x="384.153" y="208.78" width="16" height="16">
+   <properties>
+    <property name="blocked" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="23" type="gate" gid="8" x="400.746" y="208.78" width="16" height="16">
+   <properties>
+    <property name="blocked" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="24" type="gate" gid="8" x="417.27" y="208.78" width="16" height="16">
+   <properties>
+    <property name="blocked" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="25" type="gate" gid="8" x="433.103" y="208.78" width="16" height="16">
+   <properties>
+    <property name="blocked" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="26" type="gate" gid="8" x="95.75" y="128.85" width="16" height="16">
+   <properties>
+    <property name="blocked" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="27" type="gate" gid="9" x="289.018" y="111.71" width="16" height="16">
+   <properties>
+    <property name="blocked" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="28" type="gate" gid="9" x="449.143" y="208.78" width="16" height="16">
+   <properties>
+    <property name="blocked" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="29" type="gate" gid="9" x="113.024" y="128.85" width="16" height="16">
+   <properties>
+    <property name="blocked" type="bool" value="true"/>
+   </properties>
+  </object>
   <object id="30" name="ghost" type="enemy" gid="52" x="255.832" y="80.1805" width="16" height="16"/>
  </objectgroup>
 </map>
