@@ -3,7 +3,7 @@
  <tileset firstgid="1" source="dungeon2d_tiles.tsx"/>
  <layer id="1" name="Ground" width="65" height="65">
   <data encoding="base64" compression="zlib">
-   eJztmslOwzAQhv1mtKwHoK3KAWgPPUYVS1PggHh6bOGRwshjT2I7sas5/HLjTLx8Hu9tlFINoR+twwB9e9KMSTeXTJm2jnJuibJeaD17dFkpA6NrrTetd/sbl7W14UJrpjV36FzrrsMA2K7Rc2kMPrSOnfCI4r6Q/cLW894heFebH/QV1BPHt4jBg233G61XG25tfG0MoA/sbbjUWhG28M740M6GLyg08Z8F1IvSnmFj2nhNvFtX2MZGrnE9le/Uopn6P7ZTfo7rx/GZWtQd32Lbz/V9Kp8IrUti5BrjS9RSudcksYI1Ta5yp+wvZix2rUka4je2we/gmZrrsQ9edkLK37EdJ80hDBrlry/Fx/Vtw2QANiFbrt2BaRNiQNUJt3sopMrS9eHSGPRVyF9i/aAN2FFzwhAGudSXwZOi55eNh1VNDFztBjZLrSv1N59AOEdxqxNg4LMJ7YdhTxxKs2XmOzaD1qMhDHx9pttvpq7/UD+AcwE4c4IzAWBg+gxnfRbal5TIAJ53DptuHHcOK2WPzWUQ8u2pFbPf5zDg+vaUiulXHAZ4LHStRSnh9z57ji31fUy/4jLwrcVDa3Zffal6u/Z6vnzHYDC0PtTaPeRTffZBYzPgthvX37l9auq+kFMlnL1OzaAE9WHAabMS2vUU/GBsjiUyED8QBsKgXgbUHViKu9tQHimU4jzHcDxzKKV/UXlwdMuwqZ3BYwSfGhnMVJl3rmMyyDF+pxgThYEwEAbCQBgIAw6DlPcym0oZ5JAwKJfBUtVxp5aTAed/CamU465aGAiDVAxqlzAQBsJAGAgDYYAZlP6/u9yCPSlXofsKzn1Ginxy5Jk7zSnzKSXf0vULaeaB7w==
+   eJztm8luwjAQhv1mha6HLkH00BYOHKOqC4FeKp6+tshIwfXyJ7FjG83hl4mZ2Mzn8d7WQojaooPUk9RMag7oUupB6tdRJpXrs5laa0seMVB+7Tz66diWyEDpVupL6rv93I0D5VcjtfVIZ0Bsl9pzbgz2bTtSutPyyC+f/yYGrjhAystFQxk8t+1+J/XZpus2v1QG74BtJbUQxxjatOmHllJ+ar9sMvlJfiHvLwtsY6U3TdcBykTGz5w0E6dzvK/NyT+kb5Si7ng3tv1M74eKiSvxP2ZDCR3zU6sS2Fq1r2htG+t3h+wvar59NKi2fNZt9O/oGZn7VQxed1JbvOt2SJlDGNTC7a+Nj+ndGmRANj5b1G4L2vgY2HzS292X2n5LN4ZzY9BXvngZGweNx842JwxhEEt9GbwK+/yycrAqiYGp3cimkroRx/mE0rmWtzgDBi4bZL9/AMpsMmXQODSEgavPdPtNav+HxgGdC9CZE50JEAPVZ5D1GboXzYkBPW8MNt08dA7LZY+NMvDFdmqN2e8jDNDYTqkx/QphoI+FprWoTfr3LnvE1vb+mH6FMnCtxX1rdpe/Nr9Nez1XvVMwGOqPbe3ui6k++6CpGaDthsY72qdS94V9IYrJ4NzVhwFyNlramXqucTA1xxwZcBwwA2ZQLgPbHViIu1tfHSEU4jxHcbwwKGR82epAdA/YlM7gZQSfEhnMRJ53rlMyUGUie6s+CjEmMgNmkIJBqDK7ZTMDZsAM4jIIeS+zKpRBDDGDfBlUoow7tZgMpvxfjBh31cyAGYRiUMp9UkwGpYsZMANmwAyYwSmD3P/uLrZoT4rKd1+B3GeEqCdGnbHLTFlPLvXmrj9Ut315
   </data>
  </layer>
  <objectgroup id="2" name="Object">
@@ -90,7 +90,7 @@
   <object id="48" gid="8" x="95.9841" y="590.7" width="16" height="16"/>
   <object id="49" gid="8" x="111.471" y="590.7" width="16" height="16"/>
   <object id="50" gid="8" x="127.511" y="590.7" width="16" height="16"/>
-  <object id="51" gid="8" x="143.828" y="590.7" width="16" height="16"/>
+  <object id="51" gid="8" x="143.828" y="589.7" width="16" height="16"/>
   <object id="52" gid="8" x="159.868" y="590.7" width="16" height="16"/>
   <object id="53" gid="8" x="175.908" y="590.7" width="16" height="16"/>
   <object id="54" gid="8" x="191.672" y="590.7" width="16" height="16"/>
