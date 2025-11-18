@@ -94,6 +94,7 @@ public class MainEntry extends Game {
         ShapeRenderer tempRect = new ShapeRenderer();
         tempRect.begin(ShapeRenderer.ShapeType.Line);
         tempRect.setColor(Color.WHITE);
+        tempRect.setProjectionMatrix(camera.combined);
         float x = player.playerAttackBounds.x;
         float y = player.playerAttackBounds.y;
         float w = player.playerAttackBounds.width;

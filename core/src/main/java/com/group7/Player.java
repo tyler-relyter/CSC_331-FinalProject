@@ -402,39 +402,41 @@ public class Player {
         float x, y, w, h;//new bounds for rectangle
         switch (this.direction){
             case "up":
-                //attack width will be the player's width * 2, height of rectangle is the reach
-                w = this.width;
+                //attack width will be the player's width, height of rectangle is the reach
+                w = this.width; //need to fix the up/down box region
                 h = ATTACK_REACH;
                 //positioned north of the player
-                x = this.position.x; //places the rectangle in the middle of the player
-                y = this.position.y + this.height * map.getUnitScale();
+                x = this.position.x;
+                y = this.position.y + (this.height / 3); //need to position it based on players height
                 break;
-            case "down": //broken
+            case "down":
                 w = this.width;
                 h = ATTACK_REACH;
                 //south of the player
                 x = this.position.x;
-                y = this.position.y - h; // starts at bottom of player and reaches downward
+                y = this.position.y - (this.height / 3);
                 break;
             case "left":
-                //attack width is the players reach, and the height of the box is player height * 2
+                //attack width is the players reach, and the height of the box is player height
                 w = ATTACK_REACH;
                 h = this.height;
                 //will be positioned left of the player
-                x = this.position.x - w; // starts at player left, reach goes left
+                x = this.position.x - 2f; // starts at player left, reach goes left
                 y = this.position.y;
                 break;
             case "right": //broken
                 w = ATTACK_REACH;
                 h = this.height;
                 //positioned right of the player
-                x = this.position.x + this.width;
+                x = this.position.x + (this.width / 2);
                 y = this.position.y;
+                break;
             default: //default to "down"
                 w = this.width;
                 h = ATTACK_REACH;
-                x = this.position.x - this.width;
-                y = this.position.y;
+                x = this.position.x;
+                y = this.position.y - (this.height / 3);
+                break;
         }
         //set the new rectangles bounds
         this.playerAttackBounds.set(x,y,w,h);
