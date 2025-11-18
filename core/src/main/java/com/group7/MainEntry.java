@@ -7,8 +7,12 @@ import com.badlogic.gdx.graphics.Color; // color constants
 import com.badlogic.gdx.graphics.OrthographicCamera; // camera used to render world
 import com.badlogic.gdx.graphics.g2d.BitmapFont; // simple font for UI/debug text
 import com.badlogic.gdx.graphics.g2d.SpriteBatch; // main batch for drawing sprites
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils; // screen clearing helpers
 import com.badlogic.gdx.utils.viewport.*; // viewport types used to handle resizing
+
+import java.awt.*;
 
 public class MainEntry extends Game {
     private OrthographicCamera camera; // camera used for map and sprite rendering
@@ -54,6 +58,7 @@ public class MainEntry extends Game {
         // create player centered in the world initially
         player = new Player(worldWidth / 2f, worldHeight / 2f);
         player.setMap(gameMap); // attach map to player so collisions work
+
     }
 
     @Override
@@ -74,6 +79,30 @@ public class MainEntry extends Game {
         spriteBatch.begin(); // begin drawing sprites
         player.draw(spriteBatch); // draw player
         spriteBatch.end(); // finish sprite drawing
+
+        //update enemies here, if we had any :/ *insert timmy turners dad in front of a trophy case meme here*
+
+        //check for attack hits
+        if (player.isAttacking()){
+            Rectangle attackHitbox = player.getPlayerAttackBounds();
+            //check her to see if the enemy bounds overlaps with the attack bounds to detect a hit
+            // if they are, enemy will take damage with some kind of enemy.takeDamage() method???
+        }
+
+
+        //render a temporary rectangle object to show the players attack range for testing
+        ShapeRenderer tempRect = new ShapeRenderer();
+        tempRect.begin(ShapeRenderer.ShapeType.Line);
+        tempRect.setColor(Color.WHITE);
+        float x = player.playerAttackBounds.x;
+        float y = player.playerAttackBounds.y;
+        float w = player.playerAttackBounds.width;
+        float h = player.playerAttackBounds.height;
+
+        tempRect.rect(x, y, w, h);
+        tempRect.end();
+
+
     }
 
     // camera follows player with a small offset to keep player inside viewport center-ish

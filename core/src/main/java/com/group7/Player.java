@@ -56,6 +56,10 @@ public class Player {
     // small gap to keep between player and blocked tile (world units)
     private static final float COLLISION_PADDING = 0.05f; // tweak to change visual gap
 
+    //TEMPORARILY PUBLIC WHILE I TEST THE RECTANGLE AND DRAW IT MAKE PRIVATE LATER!!!
+    public final Rectangle playerAttackBounds; //hitbox for the attack
+    private static final float ATTACK_REACH = 10f; //how far attack extends (in world units)
+
     // constructor: initialize position, vectors, sizes and load animations
     public Player(float x, float y) {
         this.position = new Vector2(x,y); // set initial position
@@ -77,6 +81,8 @@ public class Player {
 
         // load sprite frames and construct animations
         loadAnimations();
+
+        this.playerAttackBounds = new Rectangle();
     }
 
     // attach the Map instance used for collision detection and rendering alignment
@@ -304,6 +310,9 @@ public class Player {
         this.position.x = MathUtils.clamp(this.position.x, 0, worldWidth - width);
         this.position.y = MathUtils.clamp(this.position.y, 0, worldHeight - height);
 
+        // update the attack bounds
+        updateAttackBounds();
+
         // advance animation time
         stateTime += delta;
     }
@@ -388,6 +397,49 @@ public class Player {
         }
     }
 
+    // updates the attackBounds rectangle based on the players current direction
+    private void updateAttackBounds() {
+        float x, y, w, h;//new bounds for rectangle
+        switch (this.direction){
+            case "up":
+                //attack width will be the player's width * 2, height of rectangle is the reach
+                w = this.width;
+                h = ATTACK_REACH;
+                //positioned north of the player
+                x = this.position.x; //places the rectangle in the middle of the player
+                y = this.position.y + this.height * map.getUnitScale();
+                break;
+            case "down": //broken
+                w = this.width;
+                h = ATTACK_REACH;
+                //south of the player
+                x = this.position.x;
+                y = this.position.y - h; // starts at bottom of player and reaches downward
+                break;
+            case "left":
+                //attack width is the players reach, and the height of the box is player height * 2
+                w = ATTACK_REACH;
+                h = this.height;
+                //will be positioned left of the player
+                x = this.position.x - w; // starts at player left, reach goes left
+                y = this.position.y;
+                break;
+            case "right": //broken
+                w = ATTACK_REACH;
+                h = this.height;
+                //positioned right of the player
+                x = this.position.x + this.width;
+                y = this.position.y;
+            default: //default to "down"
+                w = this.width;
+                h = ATTACK_REACH;
+                x = this.position.x - this.width;
+                y = this.position.y;
+        }
+        //set the new rectangles bounds
+        this.playerAttackBounds.set(x,y,w,h);
+    }
+
     // accessor used by camera to follow the player
     public float getBottomY(){
         return this.position.y; // bottom Y of player
@@ -404,6 +456,14 @@ public class Player {
     }
     public float getPositionY(){
         return this.position.y;
+    }
+
+    public boolean isAttacking(){
+        return this.isAttacking;
+    }
+
+    public Rectangle getPlayerAttackBounds() {
+        return this.playerAttackBounds;
     }
 
     // dispose loaded textures to free GPU memory
