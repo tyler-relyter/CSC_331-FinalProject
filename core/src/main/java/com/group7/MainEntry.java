@@ -26,6 +26,7 @@ public class MainEntry extends Game {
     private float worldHeight; // world height in world units
 
     private Player player; // player instance
+    private Enemy enemy; // Enemy instance
 
     private static SpriteBatch spriteBatch; // shared sprite batch for drawing sprites
     private BitmapFont font; // font for debugging or HUD text
@@ -54,12 +55,20 @@ public class MainEntry extends Game {
         // create player centered in the world initially
         player = new Player(worldWidth / 2f, worldHeight / 2f);
         player.setMap(gameMap); // attach map to player so collisions work
+
+        // create the enemy
+        enemy = new Enemy(worldWidth / 2f + 20f, worldHeight / 2f, player);
+        enemy.setMap(gameMap);
     }
 
     @Override
     public void render(){
         float delta = Gdx.graphics.getDeltaTime(); // compute elapsed time since last frame
         player.update(delta, worldWidth, worldHeight); // update player (movement, collisions)
+
+        if (enemy != null) {
+            enemy.update(delta, worldWidth, worldHeight);   // <--- NEW update enemy
+        }
 
         ScreenUtils.clear(Color.BLACK); // clear screen to black
         viewport.apply(); // apply viewport transforms to gl viewport
@@ -73,6 +82,11 @@ public class MainEntry extends Game {
         spriteBatch.setProjectionMatrix(camera.combined); // align batch with camera
         spriteBatch.begin(); // begin drawing sprites
         player.draw(spriteBatch); // draw player
+
+        if (enemy != null) {
+            enemy.draw(spriteBatch);                        // <--- NEW draw enemey
+        }
+
         spriteBatch.end(); // finish sprite drawing
     }
 
@@ -92,6 +106,7 @@ public class MainEntry extends Game {
         spriteBatch.dispose(); // free sprite batch GPU resources
         font.dispose(); // dispose font
         if (player != null) player.dispose(); // dispose player resources (textures)
+        if (enemy != null) enemy.dispose(); // dispose of enemey resources
         if (gameMap != null) gameMap.dispose(); // dispose map and renderer
     }
 }

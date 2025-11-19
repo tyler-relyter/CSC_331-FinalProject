@@ -35,7 +35,9 @@ public class Enemy {
         this.stateTime = 0f;
 
         // super simple visual for now – replace with your own sprite/animation later
-        this.texture = new Texture(Gdx.files.internal("Characters/bluefire.png"));
+        this.texture = new Texture(Gdx.files.internal("Enemys/bluefire.png"));
+
+
     }
 
     public void setMap(Map map) {
