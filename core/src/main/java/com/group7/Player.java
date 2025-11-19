@@ -100,7 +100,7 @@ public class Player {
         Array<TextureRegion> idleDownFrames = new Array<>();
         for (int i = 0; i <= 5; i++){
             // load the texture file and keep a reference to dispose later
-            Texture frameTexture = new Texture(Gdx.files.internal("Characters/IdleDown/idle_down_0"+i+".png"));
+            Texture frameTexture = new Texture(Gdx.files.internal("Character/IdleDown/idle_down_0"+i+".png"));
             idleAnimationTextures.add(frameTexture); // track texture
             idleDownFrames.add(new TextureRegion(frameTexture)); // add frame region
         }
@@ -109,7 +109,7 @@ public class Player {
         // idle up frames
         Array<TextureRegion> idleUpFrames = new Array<>();
         for (int i = 0; i<=5; i++){
-            Texture frameTexture = new Texture(Gdx.files.internal("Characters/IdleUp/idle_up_0"+i+".png"));
+            Texture frameTexture = new Texture(Gdx.files.internal("Character/IdleUp/idle_up_0"+i+".png"));
             idleAnimationTextures.add(frameTexture);
             idleUpFrames.add(new TextureRegion((frameTexture)));
         }
@@ -118,7 +118,7 @@ public class Player {
         // idle left frames
         Array<TextureRegion> idleLeftFrames = new Array<>();
         for (int i = 0; i<=5; i++){
-            Texture frameTexture = new Texture(Gdx.files.internal("Characters/IdleLeft/idle_left_0"+i+".png"));
+            Texture frameTexture = new Texture(Gdx.files.internal("Character/IdleLeft/idle_left_0"+i+".png"));
             idleAnimationTextures.add(frameTexture);
             idleLeftFrames.add(new TextureRegion(frameTexture));
         }
@@ -127,7 +127,7 @@ public class Player {
         // idle right frames
         Array<TextureRegion> idleRightFrames = new Array<>();
         for (int i = 0; i<=5; i++){
-            Texture frameTexture = new Texture(Gdx.files.internal("Characters/IdleRight/idle_right_0"+i+".png"));
+            Texture frameTexture = new Texture(Gdx.files.internal("Character/IdleRight/idle_right_0"+i+".png"));
             idleAnimationTextures.add(frameTexture);
             idleRightFrames.add(new TextureRegion(frameTexture));
         }
@@ -136,7 +136,7 @@ public class Player {
         // walk down frames
         Array<TextureRegion> walkDownFrames = new Array<>();
         for (int i = 0; i<=5; i++){
-            Texture frameTexture = new Texture(Gdx.files.internal("Characters/WalkDown/walk_down_0"+i+".png"));
+            Texture frameTexture = new Texture(Gdx.files.internal("Character/WalkDown/walk_down_0"+i+".png"));
             walkAnimationTextures.add(frameTexture);
             walkDownFrames.add(new TextureRegion(frameTexture));
         }
@@ -145,7 +145,7 @@ public class Player {
         // walk up frames
         Array<TextureRegion> walkUpFrames = new Array<>();
         for (int i = 0; i<=5; i++){
-            Texture frameTexture = new Texture(Gdx.files.internal("Characters/WalkUp/walk_up_0"+i+".png"));
+            Texture frameTexture = new Texture(Gdx.files.internal("Character/WalkUp/walk_up_0"+i+".png"));
             walkAnimationTextures.add(frameTexture);
             walkUpFrames.add(new TextureRegion(frameTexture));
         }
@@ -154,7 +154,7 @@ public class Player {
         // walk left frames
         Array<TextureRegion> walkLeftFrames = new Array<>();
         for (int i = 0; i<=5; i++){
-            Texture frameTexture = new Texture(Gdx.files.internal("Characters/WalkLeft/walk_left_0"+i+".png"));
+            Texture frameTexture = new Texture(Gdx.files.internal("Character/WalkLeft/walk_left_0"+i+".png"));
             walkAnimationTextures.add(frameTexture);
             walkLeftFrames.add(new TextureRegion(frameTexture));
         }
@@ -163,7 +163,7 @@ public class Player {
         // walk right frames
         Array<TextureRegion> walkRightFrames = new Array<>();
         for (int i = 0; i<=5; i++){
-            Texture frameTexture = new Texture(Gdx.files.internal("Characters/WalkRight/walk_right_0"+i+".png"));
+            Texture frameTexture = new Texture(Gdx.files.internal("Character/WalkRight/walk_right_0"+i+".png"));
             walkAnimationTextures.add(frameTexture);
             walkRightFrames.add(new TextureRegion(frameTexture));
         }
@@ -172,7 +172,7 @@ public class Player {
         // attack up frames
         Array<TextureRegion> attackUpFrames = new Array<>();
         for (int i = 0; i <=3; i++){
-            Texture frameTexture = new Texture(Gdx.files.internal("Characters/AttackUp/attack_up_0"+i+".png"));
+            Texture frameTexture = new Texture(Gdx.files.internal("Character/AttackUp/attack_up_0"+i+".png"));
             attackAnimationTextures.add(frameTexture);
             attackUpFrames.add(new TextureRegion(frameTexture));
         }
@@ -181,7 +181,7 @@ public class Player {
         // attack down frames
         Array<TextureRegion> attackDownFrames = new Array<>();
         for (int i = 0; i <=3; i++){
-            Texture frameTexture = new Texture(Gdx.files.internal("Characters/AttackDown/attack_down_0"+i+".png"));
+            Texture frameTexture = new Texture(Gdx.files.internal("Character/AttackDown/attack_down_0"+i+".png"));
             attackAnimationTextures.add(frameTexture);
             attackDownFrames.add(new TextureRegion(frameTexture));
         }
@@ -190,7 +190,7 @@ public class Player {
         // attack left frames
         Array<TextureRegion> attackLeftFrames = new Array<>();
         for (int i = 0; i <=3; i++){
-            Texture frameTexture = new Texture(Gdx.files.internal("Characters/AttackLeft/attack_left_0"+i+".png"));
+            Texture frameTexture = new Texture(Gdx.files.internal("Character/AttackLeft/attack_left_0"+i+".png"));
             attackAnimationTextures.add(frameTexture);
             attackLeftFrames.add(new TextureRegion(frameTexture));
         }
@@ -199,7 +199,7 @@ public class Player {
         // attack right frames
         Array<TextureRegion> attackRightFrames = new Array<>();
         for (int i = 0; i <=3; i++){
-            Texture frameTexture = new Texture(Gdx.files.internal("Characters/AttackRight/attack_right_0"+i+".png"));
+            Texture frameTexture = new Texture(Gdx.files.internal("Character/AttackRight/attack_right_0"+i+".png"));
             attackAnimationTextures.add(frameTexture);
             attackRightFrames.add(new TextureRegion(frameTexture));
         }

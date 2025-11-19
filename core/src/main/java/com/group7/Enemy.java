@@ -12,8 +12,8 @@ public class Enemy {
     private final float width;
     private final float height;
 
-    private Vector2 position;
-    private Rectangle damageArea;
+    private Vector2 position; //sets enemy position
+    private Rectangle damageArea; //rectangle for the enemy "hitbox"
 
     private float health;
     private Texture enemyTexture;
@@ -25,7 +25,7 @@ public class Enemy {
     public Enemy(float x, float y){
        this.width = 15f;
        this.height = 15f;
-       this.position  = new Vector2(x, y);
+       this.position  = new Vector2(x, y); //sets position of the enemy on the map
        this.damageArea = new Rectangle();
        this.enemyTexture = new Texture(Gdx.files.internal("Enemy/test_enemy.png"));
        this.enemySprite = new Sprite(enemyTexture);
@@ -38,9 +38,15 @@ public class Enemy {
 
     }
 
-    public void draw(){
-        SpriteBatch enemySprite = new SpriteBatch();
-        enemySprite.draw(enemyTexture, 0, 0);
+    public void draw(SpriteBatch spriteBatch){
+        spriteBatch.draw(enemyTexture, this.position.x,this.position.y);
+    }
+
+    public float getPositionX(){
+        return this.position.x;
+    }
+    public float getPositionY(){
+        return this.position.y;
     }
 
 }

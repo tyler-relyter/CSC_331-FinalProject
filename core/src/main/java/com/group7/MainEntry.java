@@ -30,6 +30,7 @@ public class MainEntry extends Game {
     private float worldHeight; // world height in world units
 
     private Player player; // player instance
+    private Enemy testEnemy; // enemy instance
 
     private static SpriteBatch spriteBatch; // shared sprite batch for drawing sprites
     private BitmapFont font; // font for debugging or HUD text
@@ -59,6 +60,9 @@ public class MainEntry extends Game {
         player = new Player(worldWidth / 2f, worldHeight / 2f);
         player.setMap(gameMap); // attach map to player so collisions work
 
+        testEnemy = new Enemy(worldWidth/2f, worldHeight/2f);
+        testEnemy.setMap(gameMap);
+
     }
 
     @Override
@@ -78,6 +82,7 @@ public class MainEntry extends Game {
         spriteBatch.setProjectionMatrix(camera.combined); // align batch with camera
         spriteBatch.begin(); // begin drawing sprites
         player.draw(spriteBatch); // draw player
+        testEnemy.draw(spriteBatch); // draw test enemy
         spriteBatch.end(); // finish sprite drawing
 
         //update enemies here, if we had any :/ *insert timmy turners dad in front of a trophy case meme here*
