@@ -25,7 +25,7 @@
   </properties>
   <image source="Tiles/tile_0076.png" width="16" height="16"/>
   <objectgroup draworder="index" id="2">
-   <object id="1" x="1" y="1" width="15" height="15">
+   <object id="1" name="gate" x="1" y="1" width="15" height="15">
     <properties>
      <property name="blocked" type="bool" value="true"/>
     </properties>
@@ -38,7 +38,7 @@
   </properties>
   <image source="Tiles/tile_0077.png" width="16" height="16"/>
   <objectgroup draworder="index" id="2">
-   <object id="1" x="0" y="1" width="16" height="15">
+   <object id="1" name="gate" x="0" y="1" width="16" height="15">
     <properties>
      <property name="blocked" type="bool" value="true"/>
     </properties>
@@ -51,7 +51,7 @@
   </properties>
   <image source="Tiles/tile_0078.png" width="16" height="16"/>
   <objectgroup draworder="index" id="2">
-   <object id="1" x="0" y="1" width="15" height="15">
+   <object id="1" name="gate" x="0" y="1" width="15" height="15">
     <properties>
      <property name="blocked" type="bool" value="true"/>
     </properties>
