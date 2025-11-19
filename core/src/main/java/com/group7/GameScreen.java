@@ -1,0 +1,103 @@
+package com.group7;
+
+// imports for libGDX application structure, rendering, camera and viewport
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color; // color constants
+import com.badlogic.gdx.graphics.OrthographicCamera; // camera used to render world
+import com.badlogic.gdx.graphics.g2d.BitmapFont; // simple font for UI/debug text
+import com.badlogic.gdx.graphics.g2d.SpriteBatch; // main batch for drawing sprites
+import com.badlogic.gdx.utils.ScreenUtils; // screen clearing helpers
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.*; // viewport types used to handle resizing
+
+public class GameScreen extends ScreenAdapter {
+
+    private final MainEntry game;
+
+    private OrthographicCamera camera; // camera used for map and sprite rendering
+    private Viewport viewport; // viewport used to maintain aspect ratio
+
+    // path to TMX map resource in assets folder
+    private static final String MAP_PATH = "Maps/survival2d_knockoff.tmx";
+    private Map gameMap; // Map instance for rendering and collision queries
+
+    // desired view size in world units for the camera
+    private static final float VIEW_WIDTH = 100f;
+    private static final float VIEW_HEIGHT = 100f;
+
+    private float worldWidth; // world width in world units (tiles * visualScale)
+    private float worldHeight; // world height in world units
+
+    private Player player; // player instance
+
+    private static SpriteBatch spriteBatch; // shared sprite batch for drawing sprites
+    private BitmapFont font; // font for debugging or HUD text
+
+    public GameScreen(MainEntry game) {
+        this.game = game;
+    }
+
+    @Override
+    public void show() {
+            // visual scale: 1f = normal tile size from TMX, >1 makes tiles larger visually
+        float mapVisualScale = 6f; // chosen to make tiles visually larger
+
+        camera = new OrthographicCamera(); // create world camera
+        camera.setToOrtho(false, VIEW_WIDTH, VIEW_HEIGHT); // set camera projection and viewport size
+
+        viewport = new ExtendViewport(VIEW_WIDTH, VIEW_HEIGHT, camera); // create an extend viewport
+
+        spriteBatch = new SpriteBatch(); // create main sprite batch
+        font = new BitmapFont(); // instantiate default font
+        font.setColor(Color.WHITE); // set font color to white
+
+        // create the map with the selected visual scale; Map will load TMX and create renderer
+        gameMap = new Map(MAP_PATH, mapVisualScale); // pass visual scale to Map constructor
+
+        // compute world dimensions in world units so camera and clamping can use them
+        worldWidth = gameMap.getWorldWidthTiles() * mapVisualScale; // tiles * visual scale => world units
+        worldHeight = gameMap.getWorldHeightTiles() * mapVisualScale; // same for height
+
+        // create player centered in the world initially
+        player = new Player(worldWidth / 2f, worldHeight / 2f);
+        player.setMap(gameMap); // attach map to player so collisions work
+    }
+
+    @Override
+    public void render(float delta) {
+        player.update(delta, worldWidth, worldHeight); // update player (movement, collisions)
+
+        ScreenUtils.clear(Color.BLACK); // clear screen to black
+        viewport.apply(); // apply viewport transforms to gl viewport
+        updateCamera(); // update camera position based on player
+        camera.update(); // update camera matrices
+
+        // Render tiled map first so sprites appear above it
+        gameMap.render(camera); // mapRenderer draws the map using provided camera
+
+        // Then render player and other sprites using the shared SpriteBatch
+        spriteBatch.setProjectionMatrix(camera.combined); // align batch with camera
+        spriteBatch.begin(); // begin drawing sprites
+        player.draw(spriteBatch); // draw player
+        spriteBatch.end(); // finish sprite drawing
+    }
+    // camera follows player with a small offset to keep player inside viewport center-ish
+    private void updateCamera() {
+        camera.position.x = player.getPositionX() + 5f; //offset horizontally
+        camera.position.y = player.getPositionY() + 5f; //offset vertically
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height); //forward resize to the viewport
+    }
+
+    @Override
+    public void dispose() {
+        spriteBatch.dispose(); // free sprite batch GPU resources
+        font.dispose(); // dispose font
+        if (player != null) player.dispose(); // dispose player resources (textures)
+        if (gameMap != null) gameMap.dispose(); // dispose map and renderer
+    }
+}
