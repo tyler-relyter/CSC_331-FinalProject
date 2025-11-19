@@ -12,6 +12,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch; // batch used to draw sprites
 import com.badlogic.gdx.graphics.g2d.TextureRegion; // region wrapper for frames
 import com.badlogic.gdx.utils.Array; // libGDX array type for frames
 
+/**
+ * Player class manages player animations, movement, and attack sequence / range. Used within the main method
+ * to create a new player object.
+ */
 public class Player {
     // final world-space size for the player sprite
     private final float width; // player's width in world units
