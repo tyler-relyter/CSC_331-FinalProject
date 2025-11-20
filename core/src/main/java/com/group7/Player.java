@@ -61,9 +61,9 @@ public class Player {
         this.position = new Vector2(x,y); // set initial position
         this.velocity = new Vector2(0, 0); // start stationary
         this.speed = 100f; // default speed (world units / second)
-        this.stateTime = 0f; // start animation timer at zero
-        this.direction = "down"; // default facing direction
-        this.isWalking = false; // not walking initially
+        this.stateTime = 0f;      // start animation timer at zero
+        this.direction = "down";  // default facing direction
+        this.isWalking = false;   // not walking initially
         this.isAttacking = false; // not attacking initially
 
         // set a fixed world-unit size for the player (keeps sprite visually consistent)

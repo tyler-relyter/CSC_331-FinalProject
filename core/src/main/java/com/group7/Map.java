@@ -1,3 +1,4 @@
+// File: core/src/main/java/com/group7/Map.java
 package com.group7;
 
 // Import libGDX classes for asset loading, rendering, and tile map handling
@@ -8,8 +9,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion; // represents a rectangular 
 import com.badlogic.gdx.maps.MapLayer; // base class for map layers (tile layers, object layers, etc.)
 import com.badlogic.gdx.maps.MapObject; // represents an individual object placed on a map
 import com.badlogic.gdx.maps.MapProperties; // key-value properties attached to map elements
+import com.badlogic.gdx.maps.objects.RectangleMapObject; // map object that is a rectangle
 import com.badlogic.gdx.maps.objects.TextureMapObject; // map object that contains a texture/sprite
+import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject; // correct package for tile objects placed in an object layer
 import com.badlogic.gdx.maps.tiled.TiledMap; // represents a TMX tiled map file
+import com.badlogic.gdx.maps.tiled.TiledMapTile; // represents a tile definition
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer; // represents a layer containing tiles in a grid
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer; // renders orthogonal (top-down) tile maps
 import com.badlogic.gdx.math.Rectangle; // rectangle shape used for collision detection
@@ -125,24 +129,21 @@ public class Map {
         ArrayList<Integer> tileLayerIndices = new ArrayList<>();
         for (int i = 0; i < tiledMap.getLayers().getCount(); i++) {
             MapLayer layer = tiledMap.getLayers().get(i);
-            String name = layer.getName();
 
-            // Check if this layer is a tile layer (grid of tiles)
+            // If layer is a tile layer, add its index to the render list
             if (layer instanceof TiledMapTileLayer) {
-                tileLayerIndices.add(i); // add to render list
+                tileLayerIndices.add(i);
 
-                // Store reference to "Ground" layer for collision checks
-                if ("Ground".equals(name)) {
+                // Check for specific named tile layers
+                String layerName = layer.getName();
+                if ("Ground".equalsIgnoreCase(layerName)) {
                     this.groundLayer = (TiledMapTileLayer) layer;
-                }
-
-                // Store reference to "Object" tile layer (if objects are tiles)
-                if ("Object".equals(name)) {
+                } else if ("Object".equalsIgnoreCase(layerName)) {
                     this.objectTileLayer = (TiledMapTileLayer) layer;
                 }
             } else {
-                // Layer is an object group (contains sprites/shapes, not tiles)
-                if ("Object".equals(name)) {
+                // If layer is an object group, check for the "Object" layer
+                if ("Object".equalsIgnoreCase(layer.getName())) {
                     this.objectsLayer = layer;
                 }
             }
@@ -196,9 +197,7 @@ public class Map {
 
         // Render only the tile layers (not object groups)
         if (renderLayerIndices != null && renderLayerIndices.length > 0) {
-            mapRenderer.render(renderLayerIndices); // render specific layers
-        } else {
-            mapRenderer.render(); // render all layers
+            mapRenderer.render(renderLayerIndices);
         }
 
         // Manually render TextureMapObjects from the object layer (if present)
@@ -247,41 +246,58 @@ public class Map {
      * @return true if blocked, false if passable
      */
     public boolean isBlocked(float worldX, float worldY) {
-        // First check collision with objects in the object layer (sprites/textures)
+        // First check collision with objects in the object layer (sprites/textures/rectangles/tiles)
         if (objectsLayer != null && objectsLayer.getObjects() != null) {
-            // Loop through every object in the layer
             for (MapObject obj : objectsLayer.getObjects()) {
+                MapProperties props = obj.getProperties();
+                if (!props.containsKey("blocked")) continue;
+
+                Object val = props.get("blocked");
+                boolean blocked = (val instanceof Boolean) ? (Boolean) val : Boolean.parseBoolean(val.toString());
+                if (!blocked) continue;
+
+                Rectangle objBounds = null;
+
+                // TextureMapObject (sprite placed as object)
                 if (obj instanceof TextureMapObject) {
                     TextureMapObject tmo = (TextureMapObject) obj;
-                    MapProperties props = obj.getProperties();
+                    TextureRegion region = tmo.getTextureRegion();
+                    if (region == null) continue;
+                    float objX = tmo.getX() * unitScale;
+                    float objY = tmo.getY() * unitScale;
+                    float objW = region.getRegionWidth() * unitScale * tmo.getScaleX();
+                    float objH = region.getRegionHeight() * unitScale * tmo.getScaleY();
+                    objBounds = new Rectangle(objX, objY, objW, objH);
+                }
+                // Tile object placed in object layer (handled by correct class)
+                else if (obj instanceof TiledMapTileMapObject) {
+                    TiledMapTileMapObject tto = (TiledMapTileMapObject) obj;
+                    TiledMapTile tile = tto.getTile();
+                    if (tile == null) continue;
+                    TextureRegion region = tile.getTextureRegion();
+                    float objX = tto.getX() * unitScale;
+                    float objY = tto.getY() * unitScale;
+                    float objW = (region != null ? region.getRegionWidth() : tileWidth) * unitScale * tto.getScaleX();
+                    float objH = (region != null ? region.getRegionHeight() : tileHeight) * unitScale * tto.getScaleY();
+                    objBounds = new Rectangle(objX, objY, objW, objH);
+                }
+                // Rectangle object (explicit rectangle in TMX)
+                else if (obj instanceof RectangleMapObject) {
+                    RectangleMapObject rmo = (RectangleMapObject) obj;
+                    Rectangle r = rmo.getRectangle();
+                    objBounds = new Rectangle(r.x * unitScale, r.y * unitScale, r.width * unitScale, r.height * unitScale);
+                }
+                // fallback: try to read x/y/width/height properties (in pixels)
+                else {
+                    float ox = props.containsKey("x") ? Float.parseFloat(props.get("x").toString()) : 0f;
+                    float oy = props.containsKey("y") ? Float.parseFloat(props.get("y").toString()) : 0f;
+                    float ow = props.containsKey("width") ? Float.parseFloat(props.get("width").toString()) : tileWidth;
+                    float oh = props.containsKey("height") ? Float.parseFloat(props.get("height").toString()) : tileHeight;
+                    objBounds = new Rectangle(ox * unitScale, oy * unitScale, ow * unitScale, oh * unitScale);
+                }
 
-                    // Check if object has the "blocked" property
-                    if (props.containsKey("blocked")) {
-                        Object val = props.get("blocked");
-
-                        // Parse blocked value (could be Boolean or String)
-                        boolean blocked = (val instanceof Boolean) ? (Boolean) val : Boolean.parseBoolean(val.toString());
-
-                        // Only test collision if object is marked as blocked
-                        if (blocked) {
-                            TextureRegion region = tmo.getTextureRegion();
-                            if (region != null) {
-                                // Calculate object's bounding box in world units
-                                float objX = tmo.getX() * unitScale;
-                                float objY = tmo.getY() * unitScale;
-                                float objWidth = region.getRegionWidth() * unitScale * tmo.getScaleX();
-                                float objHeight = region.getRegionHeight() * unitScale * tmo.getScaleY();
-
-                                // Create rectangle for collision test
-                                Rectangle objBounds = new Rectangle(objX, objY, objWidth, objHeight);
-
-                                // Check if query point is inside object's bounds
-                                if (objBounds.contains(worldX, worldY)) {
-                                    return true; // collision detected
-                                }
-                            }
-                        }
-                    }
+                if (objBounds != null && objBounds.contains(worldX, worldY)) {
+                    return true;
                 }
             }
         }
@@ -319,47 +335,26 @@ public class Map {
 
         // Check the ground layer for blocked tiles
         if (groundLayer != null) {
-            // Get the cell (tile) at this position
             TiledMapTileLayer.Cell cell = groundLayer.getCell(tileX, tileY);
-
-            // Check if cell exists and contains a tile
             if (cell != null && cell.getTile() != null) {
-                // Read tile properties
-                MapProperties props = cell.getTile().getProperties();
-
-                // Check for "blocked" property
-                if (props.containsKey("blocked")) {
-                    Object val = props.get("blocked");
-
-                    // Handle Boolean type
-                    if (val instanceof Boolean) {
-                        if ((Boolean) val) return true;
-                    }
-                    // Handle String type (parse to boolean)
-                    else if (Boolean.parseBoolean(val.toString())) {
-                        return true;
-                    }
+                MapProperties tileProps = cell.getTile().getProperties();
+                if (tileProps.containsKey("blocked")) {
+                    Object val = tileProps.get("blocked");
+                    boolean blocked = (val instanceof Boolean) ? (Boolean) val : Boolean.parseBoolean(val.toString());
+                    if (blocked) return true;
                 }
             }
         }
 
         // Check the object tile layer for blocked tiles
         if (objectTileLayer != null) {
-            // Get the cell at this position
             TiledMapTileLayer.Cell cell = objectTileLayer.getCell(tileX, tileY);
-
             if (cell != null && cell.getTile() != null) {
-                MapProperties props = cell.getTile().getProperties();
-
-                // Check for "blocked" property
-                if (props.containsKey("blocked")) {
-                    Object val = props.get("blocked");
-
-                    if (val instanceof Boolean) {
-                        if ((Boolean) val) return true;
-                    } else if (Boolean.parseBoolean(val.toString())) {
-                        return true;
-                    }
+                MapProperties tileProps = cell.getTile().getProperties();
+                if (tileProps.containsKey("blocked")) {
+                    Object val = tileProps.get("blocked");
+                    boolean blocked = (val instanceof Boolean) ? (Boolean) val : Boolean.parseBoolean(val.toString());
+                    if (blocked) return true;
                 }
             }
         }
@@ -369,7 +364,7 @@ public class Map {
 
     /**
      * Sets the blocked state of a tile or object at a world position
-     * This allows dynamic modification of collision (e.g., destroying obstacles)
+     * This allows dynamic modification of collision properties at runtime.
      * @param worldX x coordinate in world units
      * @param worldY y coordinate in world units
      * @param blocked new blocked state (true = blocked, false = passable)
@@ -381,20 +376,15 @@ public class Map {
                 if (obj instanceof TextureMapObject) {
                     TextureMapObject tmo = (TextureMapObject) obj;
                     TextureRegion region = tmo.getTextureRegion();
-
                     if (region != null) {
-                        // Calculate object's bounding box in world units
                         float objX = tmo.getX() * unitScale;
                         float objY = tmo.getY() * unitScale;
                         float objWidth = region.getRegionWidth() * unitScale * tmo.getScaleX();
                         float objHeight = region.getRegionHeight() * unitScale * tmo.getScaleY();
-
                         Rectangle objBounds = new Rectangle(objX, objY, objWidth, objHeight);
-
-                        // If position is inside this object, update its blocked property
                         if (objBounds.contains(worldX, worldY)) {
                             obj.getProperties().put("blocked", blocked);
-                            return; // done - found matching object
+                            return;
                         }
                     }
                 }
@@ -414,23 +404,116 @@ public class Map {
         // Try to update blocked property on object tile layer first
         if (objectTileLayer != null) {
             TiledMapTileLayer.Cell cell = objectTileLayer.getCell(tileX, tileY);
-
             if (cell != null && cell.getTile() != null) {
-                // Update the tile's blocked property
                 cell.getTile().getProperties().put("blocked", blocked);
-                return; // done
+                return;
             }
         }
 
         // Fall back to ground layer if object tile layer didn't have a tile there
         if (groundLayer != null) {
             TiledMapTileLayer.Cell cell = groundLayer.getCell(tileX, tileY);
-
             if (cell != null && cell.getTile() != null) {
-                // Update the tile's blocked property
                 cell.getTile().getProperties().put("blocked", blocked);
             }
         }
+    }
+
+    /**
+     * Returns the first blocked tile (tile coords) that overlaps the provided rectangle.
+     * This method checks:
+     *  - object layer objects (TextureMapObject, TiledMapTileMapObject, RectangleMapObject) by rectangle overlap and their "blocked" property
+     *  - all tile cells overlapped by the rectangle in tile layers (objectTileLayer then groundLayer)
+     *
+     * @param rect rectangle in world units to test (player bounds)
+     * @return int[] {tileX, tileY} of the first blocking tile/object found, or null if none
+     */
+    public int[] getBlockedTileForRect(Rectangle rect) {
+        if (rect == null) return null;
+
+        // 1) Test object group objects (sprites/tiles/rectangles) by rectangle overlap
+        if (objectsLayer != null && objectsLayer.getObjects() != null) {
+            for (MapObject obj : objectsLayer.getObjects()) {
+                MapProperties props = obj.getProperties();
+                if (!props.containsKey("blocked")) continue;
+
+                Object val = props.get("blocked");
+                boolean blocked = (val instanceof Boolean) ? (Boolean) val : Boolean.parseBoolean(val.toString());
+                if (!blocked) continue;
+
+                Rectangle objBounds = null;
+
+                // TextureMapObject (sprite placed as object)
+                if (obj instanceof TextureMapObject) {
+                    TextureMapObject tmo = (TextureMapObject) obj;
+                    TextureRegion region = tmo.getTextureRegion();
+                    if (region == null) continue;
+                    float objX = tmo.getX() * unitScale;
+                    float objY = tmo.getY() * unitScale;
+                    float objW = region.getRegionWidth() * unitScale * tmo.getScaleX();
+                    float objH = region.getRegionHeight() * unitScale * tmo.getScaleY();
+                    objBounds = new Rectangle(objX, objY, objW, objH);
+                }
+                // Tile object placed in object layer
+                else if (obj instanceof TiledMapTileMapObject) {
+                    TiledMapTileMapObject tto = (TiledMapTileMapObject) obj;
+                    TiledMapTile tile = tto.getTile();
+                    if (tile == null) continue;
+                    TextureRegion region = tile.getTextureRegion();
+                    float objX = tto.getX() * unitScale;
+                    float objY = tto.getY() * unitScale;
+                    float objW = (region != null ? region.getRegionWidth() : tileWidth) * unitScale * tto.getScaleX();
+                    float objH = (region != null ? region.getRegionHeight() : tileHeight) * unitScale * tto.getScaleY();
+                    objBounds = new Rectangle(objX, objY, objW, objH);
+                }
+                // Rectangle object
+                else if (obj instanceof RectangleMapObject) {
+                    RectangleMapObject rmo = (RectangleMapObject) obj;
+                    Rectangle r = rmo.getRectangle();
+                    objBounds = new Rectangle(r.x * unitScale, r.y * unitScale, r.width * unitScale, r.height * unitScale);
+                }
+                // fallback: try to read x/y/width/height properties
+                else {
+                    float ox = props.containsKey("x") ? Float.parseFloat(props.get("x").toString()) : 0f;
+                    float oy = props.containsKey("y") ? Float.parseFloat(props.get("y").toString()) : 0f;
+                    float ow = props.containsKey("width") ? Float.parseFloat(props.get("width").toString()) : tileWidth;
+                    float oh = props.containsKey("height") ? Float.parseFloat(props.get("height").toString()) : tileHeight;
+                    objBounds = new Rectangle(ox * unitScale, oy * unitScale, ow * unitScale, oh * unitScale);
+                }
+
+                if (objBounds != null && objBounds.overlaps(rect)) {
+                    int tileX = (int) Math.floor(objBounds.x / visualScale);
+                    int tileY = (int) Math.floor(objBounds.y / visualScale);
+                    return new int[]{tileX, tileY};
+                }
+            }
+        }
+
+        // 2) Test tile layers by iterating all tiles overlapped by the rectangle.
+        if (groundLayer == null && objectTileLayer == null) {
+            return null;
+        }
+
+        // compute tile ranges overlapped by rect (clamped to map bounds)
+        int minTileX = (int) Math.floor(rect.x / visualScale);
+        int maxTileX = (int) Math.floor((rect.x + rect.width - 1e-6f) / visualScale);
+        int minTileY = (int) Math.floor(rect.y / visualScale);
+        int maxTileY = (int) Math.floor((rect.y + rect.height - 1e-6f) / visualScale);
+
+        minTileX = Math.max(0, minTileX);
+        minTileY = Math.max(0, minTileY);
+        maxTileX = Math.min(mapWidthTiles - 1, maxTileX);
+        maxTileY = Math.min(mapHeightTiles - 1, maxTileY);
+
+        for (int y = minTileY; y <= maxTileY; y++) {
+            for (int x = minTileX; x <= maxTileX; x++) {
+                if (isBlocked(x, y)) {
+                    return new int[]{x, y};
+                }
+            }
+        }
+
+        return null; // nothing blocked found
     }
 
     /**
