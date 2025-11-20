@@ -1,4 +1,3 @@
-// File: core/src/main/java/com/group7/Map.java
 package com.group7;
 
 // Import libGDX classes for asset loading, rendering, and tile map handling
@@ -15,6 +14,7 @@ import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject; // correct pac
 import com.badlogic.gdx.maps.tiled.TiledMap; // represents a TMX tiled map file
 import com.badlogic.gdx.maps.tiled.TiledMapTile; // represents a tile definition
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer; // represents a layer containing tiles in a grid
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer; // renders orthogonal (top-down) tile maps
 import com.badlogic.gdx.math.Rectangle; // rectangle shape used for collision detection
 import com.badlogic.gdx.utils.GdxRuntimeException; // exception thrown when libGDX encounters an error
@@ -75,7 +75,7 @@ public class Map {
      * @param mapPath path to the TMX map file in the assets folder
      */
     public Map(String mapPath) {
-        this(mapPath, 1f); // delegate to full constructor with scale = 1
+        this(mapPath, 1f); // call to full constructor with scale = 1
     }
 
     /**
@@ -85,11 +85,15 @@ public class Map {
      */
     public Map(String mapPath, float visualScale) {
         // Ensure visual scale is positive; default to 1 if invalid
-        this.visualScale = visualScale <= 0f ? 1f : visualScale;
+        if (visualScale <= 0f) {
+            this.visualScale = 1f;
+        } else {
+            this.visualScale = visualScale;
+        }
 
         // Create asset manager and register the TMX loader
         assetManager = new AssetManager();
-        assetManager.setLoader(TiledMap.class, new com.badlogic.gdx.maps.tiled.TmxMapLoader());
+        assetManager.setLoader(TiledMap.class, new TmxMapLoader());
 
         // Queue the TMX map for loading
         assetManager.load(mapPath, TiledMap.class);
@@ -101,7 +105,9 @@ public class Map {
         this.tiledMap = assetManager.get(mapPath, TiledMap.class);
 
         // Throw error if map failed to load
-        if (this.tiledMap == null) throw new GdxRuntimeException("Failed to load tiled map: " + mapPath);
+        if (this.tiledMap == null) {
+            throw new GdxRuntimeException("Failed to load tiled map: " + mapPath);
+        }
 
         // Read map properties from the TMX file
         MapProperties props = tiledMap.getProperties();
@@ -153,6 +159,46 @@ public class Map {
         this.renderLayerIndices = new int[tileLayerIndices.size()];
         for (int i = 0; i < tileLayerIndices.size(); i++) {
             this.renderLayerIndices[i] = tileLayerIndices.get(i);
+        }
+    }
+
+    /**
+     * Helper: safely parse a float property from MapProperties
+     * Returns defaultValue if key missing or parse fails.
+     */
+    private float getFloatProperty(MapProperties props, String key, float defaultValue) {
+        if (props == null) return defaultValue;
+        if (!props.containsKey(key)) return defaultValue;
+        Object o = props.get(key);
+        if (o instanceof Number) {
+            return ((Number) o).floatValue();
+        }
+        try {
+            return Float.parseFloat(o.toString());
+        } catch (Exception e) {
+            return defaultValue;
+        }
+    }
+
+    /**
+     * Helper: safely parse a boolean property from MapProperties
+     * Returns defaultValue if key missing or parse fails.
+     */
+    private boolean getBooleanProperty(MapProperties props, String key, boolean defaultValue) {
+        if (props == null) {
+            return defaultValue;
+        }
+        if (!props.containsKey(key)) {
+            return defaultValue;
+        }
+        Object obj = props.get(key);
+        if (obj instanceof Boolean) {
+            return (Boolean) obj;
+        }
+        try {
+            return Boolean.parseBoolean(obj.toString());
+        } catch (Exception e) {
+            return defaultValue;
         }
     }
 
@@ -252,8 +298,7 @@ public class Map {
                 MapProperties props = obj.getProperties();
                 if (!props.containsKey("blocked")) continue;
 
-                Object val = props.get("blocked");
-                boolean blocked = (val instanceof Boolean) ? (Boolean) val : Boolean.parseBoolean(val.toString());
+                boolean blocked = getBooleanProperty(props, "blocked", false);
                 if (!blocked) continue;
 
                 Rectangle objBounds = null;
@@ -277,8 +322,20 @@ public class Map {
                     TextureRegion region = tile.getTextureRegion();
                     float objX = tto.getX() * unitScale;
                     float objY = tto.getY() * unitScale;
-                    float objW = (region != null ? region.getRegionWidth() : tileWidth) * unitScale * tto.getScaleX();
-                    float objH = (region != null ? region.getRegionHeight() : tileHeight) * unitScale * tto.getScaleY();
+                    float widthPixels;
+                    if (region != null) {
+                        widthPixels = region.getRegionWidth();
+                    } else {
+                        widthPixels = tileWidth;
+                    }
+                    float objW = widthPixels * unitScale * tto.getScaleX();
+                    float heightPixels;
+                    if (region != null) {
+                        heightPixels = region.getRegionHeight();
+                    } else {
+                        heightPixels = tileHeight;
+                    }
+                    float objH = heightPixels * unitScale * tto.getScaleY();
                     objBounds = new Rectangle(objX, objY, objW, objH);
                 }
                 // Rectangle object (explicit rectangle in TMX)
@@ -289,10 +346,10 @@ public class Map {
                 }
                 // fallback: try to read x/y/width/height properties (in pixels)
                 else {
-                    float ox = props.containsKey("x") ? Float.parseFloat(props.get("x").toString()) : 0f;
-                    float oy = props.containsKey("y") ? Float.parseFloat(props.get("y").toString()) : 0f;
-                    float ow = props.containsKey("width") ? Float.parseFloat(props.get("width").toString()) : tileWidth;
-                    float oh = props.containsKey("height") ? Float.parseFloat(props.get("height").toString()) : tileHeight;
+                    float ox = getFloatProperty(props, "x", 0f);
+                    float oy = getFloatProperty(props, "y", 0f);
+                    float ow = getFloatProperty(props, "width", tileWidth);
+                    float oh = getFloatProperty(props, "height", tileHeight);
                     objBounds = new Rectangle(ox * unitScale, oy * unitScale, ow * unitScale, oh * unitScale);
                 }
 
@@ -339,8 +396,7 @@ public class Map {
             if (cell != null && cell.getTile() != null) {
                 MapProperties tileProps = cell.getTile().getProperties();
                 if (tileProps.containsKey("blocked")) {
-                    Object val = tileProps.get("blocked");
-                    boolean blocked = (val instanceof Boolean) ? (Boolean) val : Boolean.parseBoolean(val.toString());
+                    boolean blocked = getBooleanProperty(tileProps, "blocked", false);
                     if (blocked) return true;
                 }
             }
@@ -352,8 +408,7 @@ public class Map {
             if (cell != null && cell.getTile() != null) {
                 MapProperties tileProps = cell.getTile().getProperties();
                 if (tileProps.containsKey("blocked")) {
-                    Object val = tileProps.get("blocked");
-                    boolean blocked = (val instanceof Boolean) ? (Boolean) val : Boolean.parseBoolean(val.toString());
+                    boolean blocked = getBooleanProperty(tileProps, "blocked", false);
                     if (blocked) return true;
                 }
             }
@@ -437,8 +492,7 @@ public class Map {
                 MapProperties props = obj.getProperties();
                 if (!props.containsKey("blocked")) continue;
 
-                Object val = props.get("blocked");
-                boolean blocked = (val instanceof Boolean) ? (Boolean) val : Boolean.parseBoolean(val.toString());
+                boolean blocked = getBooleanProperty(props, "blocked", false);
                 if (!blocked) continue;
 
                 Rectangle objBounds = null;
@@ -462,8 +516,20 @@ public class Map {
                     TextureRegion region = tile.getTextureRegion();
                     float objX = tto.getX() * unitScale;
                     float objY = tto.getY() * unitScale;
-                    float objW = (region != null ? region.getRegionWidth() : tileWidth) * unitScale * tto.getScaleX();
-                    float objH = (region != null ? region.getRegionHeight() : tileHeight) * unitScale * tto.getScaleY();
+                    float widthPixels;
+                    if (region != null) {
+                        widthPixels = region.getRegionWidth();
+                    } else {
+                        widthPixels = tileWidth;
+                    }
+                    float objW = widthPixels * unitScale * tto.getScaleX();
+                    float heightPixels;
+                    if (region != null) {
+                        heightPixels = region.getRegionHeight();
+                    } else {
+                        heightPixels = tileHeight;
+                    }
+                    float objH = heightPixels * unitScale * tto.getScaleY();
                     objBounds = new Rectangle(objX, objY, objW, objH);
                 }
                 // Rectangle object
@@ -474,10 +540,10 @@ public class Map {
                 }
                 // fallback: try to read x/y/width/height properties
                 else {
-                    float ox = props.containsKey("x") ? Float.parseFloat(props.get("x").toString()) : 0f;
-                    float oy = props.containsKey("y") ? Float.parseFloat(props.get("y").toString()) : 0f;
-                    float ow = props.containsKey("width") ? Float.parseFloat(props.get("width").toString()) : tileWidth;
-                    float oh = props.containsKey("height") ? Float.parseFloat(props.get("height").toString()) : tileHeight;
+                    float ox = getFloatProperty(props, "x", 0f);
+                    float oy = getFloatProperty(props, "y", 0f);
+                    float ow = getFloatProperty(props, "width", tileWidth);
+                    float oh = getFloatProperty(props, "height", tileHeight);
                     objBounds = new Rectangle(ox * unitScale, oy * unitScale, ow * unitScale, oh * unitScale);
                 }
 
