@@ -7,22 +7,21 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class Enemy {
+public abstract class Enemy implements GameEntity {
 
-    private final float width;
-    private final float height;
+    protected Vector2 position;
+    protected Vector2 velocity;
+    protected float width;
+    protected float height;
+    protected float speed;
+    protected Map map;
+    protected Player target; // player to chase
 
-    private final Vector2 position;
-    private final Vector2 velocity;
-    private final float speed;
-
-    private Map map;
-    private Player target;   // player to chase
 
     private static final float COLLISION_PADDING = 0.05f;
 
-    private float stateTime;
-    private Texture texture;
+    protected float stateTime;
+    protected Texture texture;
 
     public Enemy(float x, float y, Player target) {
         this.position = new Vector2(x, y);
@@ -34,8 +33,9 @@ public class Enemy {
         this.target = target;
         this.stateTime = 0f;
 
-        // super simple visual for now – replace with your own sprite/animation later
-        this.texture = new Texture(Gdx.files.internal("Enemys/bluefire.png"));
+        // DO NOT load a specific texture here.
+        // Each subclass should set its own texture in its constructor.
+        this.texture = null;
 
 
     }
@@ -45,35 +45,18 @@ public class Enemy {
     }
 
     /** Basic AI: set velocity toward the player. */
-    private void updateAI() {
-        velocity.set(0, 0);
+    protected abstract void updateAI(float delta);
 
-        if (target == null) {
-            return;
-        }
-
-        float dx = target.getPositionX() - position.x;
-        float dy = target.getPositionY() - position.y;
-
-        // Don't jitter if we're basically on top of the player
-        if (dx * dx + dy * dy < 1f) {
-            return;
-        }
-
-        Vector2 toPlayer = new Vector2(dx, dy);
-        toPlayer.nor();                // direction only
-        toPlayer.scl(speed);           // scale by enemy speed
-        velocity.set(toPlayer);
-    }
 
     /**
      * Update movement + collision.
      * This is basically your Player.update() movement code,
      * but driven by updateAI() instead of keyboard.
      */
+    @Override
     public void update(float delta, float worldWidth, float worldHeight) {
         // AI decides velocity
-        updateAI();
+        updateAI(delta);
 
         Vector2 previous = new Vector2(this.position);
 
@@ -164,10 +147,14 @@ public class Enemy {
     }
 
     /** Draw enemy sprite. */
+    @Override
     public void draw(SpriteBatch batch) {
-        batch.draw(texture, position.x, position.y, width, height);
+        if (texture != null) {                     // *** safer
+            batch.draw(texture, position.x, position.y, width, height);
+        }
     }
 
+    @Override
     public Rectangle getBounds() {
         return new Rectangle(position.x, position.y, width, height);
     }

@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch; // batch used to draw sprites
 import com.badlogic.gdx.graphics.g2d.TextureRegion; // region wrapper for frames
 import com.badlogic.gdx.utils.Array; // libGDX array type for frames
 
-public class Player {
+public class Player implements GameEntity {
     // final world-space size for the player sprite
     private final float width; // player's width in world units
     private final float height; // player's height in world units
@@ -197,6 +197,7 @@ public class Player {
     }
 
     // draw the current animation frame using the supplied SpriteBatch
+    @Override
     public void draw(SpriteBatch spriteBatch){
         Animation<TextureRegion> currentAnimation = idleDownAnimation; // default animation
 
@@ -248,6 +249,7 @@ public class Player {
     }
 
     // update: handle input, move, resolve collisions and clamp to world bounds
+    @Override
     public void update(float delta, float worldWidth, float worldHeight){
         handleInput(); // update velocity based on keyboard
 
@@ -394,6 +396,7 @@ public class Player {
     }
 
     // returns a Rectangle representing the player's bounds in world coordinates
+    @Override
     public Rectangle getBounds(){
         return new Rectangle(this.position.x,this.position.y,width,height);
     }
