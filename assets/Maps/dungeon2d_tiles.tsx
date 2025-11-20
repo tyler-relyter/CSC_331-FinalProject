@@ -431,6 +431,9 @@
   <image source="Tiles/tile_0040.png" width="16" height="16"/>
  </tile>
  <tile id="103">
+  <properties>
+   <property name="blocked" type="bool" value="true"/>
+  </properties>
   <image source="Tiles/tile_0041.png" width="16" height="16"/>
  </tile>
  <tile id="104">
