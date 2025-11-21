@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera; // camera used to render wo
 import com.badlogic.gdx.graphics.g2d.BitmapFont; // simple font for UI/debug text
 import com.badlogic.gdx.graphics.g2d.SpriteBatch; // main batch for drawing sprites
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils; // screen clearing helpers
 import com.badlogic.gdx.utils.viewport.*; // viewport types used to handle resizing
 import com.badlogic.gdx.utils.Array;
@@ -32,6 +31,8 @@ public class MainEntry extends Game {
     private Player player; // player instance
     private BasicEnemy enemy; // Enemy instance
     private Array<GameEntity> entities;
+
+    private DamageLogic gameDamageLogic;
 
     private static SpriteBatch spriteBatch; // shared sprite batch for drawing sprites
     private BitmapFont font; // font for debugging or HUD text
@@ -61,19 +62,20 @@ public class MainEntry extends Game {
         player = new Player(worldWidth / 2f, worldHeight / 2f);
         player.setMap(gameMap); // attach map to player so collisions work
 
-        // create the enemy
         enemy = new BasicEnemy(worldWidth / 2f + 20f, worldHeight / 2f, player);
         enemy.setMap(gameMap);
 
 
-        entities = new Array<>();
-        entities.add(player);
         entities.add(enemy);
+
+        gameDamageLogic = new DamageLogic(player, enemy);
     }
 
     @Override
     public void render(){
         float delta = Gdx.graphics.getDeltaTime(); // compute elapsed time since last frame
+
+        gameDamageLogic.check();
 
         for (GameEntity entity : entities) {
             entity.update(delta, worldWidth, worldHeight);
@@ -81,8 +83,8 @@ public class MainEntry extends Game {
 
         ScreenUtils.clear(Color.BLACK); // clear screen to black
         viewport.apply(); // apply viewport transforms to gl viewport
-        updateCamera(); // update camera position based on player
-        camera.update(); // update camera matrices
+        updateCamera(); // check camera position based on player
+        camera.update(); // check camera matrices
 
         // Render tiled map first so sprites appear above it
         gameMap.render(camera); // mapRenderer draws the map using provided camera
@@ -90,21 +92,15 @@ public class MainEntry extends Game {
         // Then render player and other sprites using the shared SpriteBatch
         spriteBatch.setProjectionMatrix(camera.combined); // align batch with camera
         spriteBatch.begin(); // begin drawing sprites
-
+        player.draw(spriteBatch); //draws the player
         for (GameEntity entity : entities) { // draw entities
             entity.draw(spriteBatch);
         }
-
         spriteBatch.end(); // finish sprite drawing
 
-        //update enemies here, if we had any :/ *insert timmy turners dad in front of a trophy case meme here*
+        //check enemies here, if we had any :/ *insert timmy turners dad in front of a trophy case meme here*
 
-        //check for attack hits
-        if (player.isAttacking()){
-            Rectangle attackHitbox = player.getPlayerAttackBounds();
-            //check her to see if the enemy bounds overlaps with the attack bounds to detect a hit
-            // if they are, enemy will take damage with some kind of enemy.takeDamage() method???
-        }
+
 
 
         //render a temporary rectangle object to show the players attack range for testing
@@ -133,6 +129,7 @@ public class MainEntry extends Game {
     public void resize(int width, int height){
         viewport.update(width, height); // forward resize to the viewport
     }
+
 
     @Override
     public void dispose(){

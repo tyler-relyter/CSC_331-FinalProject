@@ -401,7 +401,7 @@ public class Map {
             return;
         }
 
-        // Try to update blocked property on object tile layer first
+        // Try to check blocked property on object tile layer first
         if (objectTileLayer != null) {
             TiledMapTileLayer.Cell cell = objectTileLayer.getCell(tileX, tileY);
             if (cell != null && cell.getTile() != null) {

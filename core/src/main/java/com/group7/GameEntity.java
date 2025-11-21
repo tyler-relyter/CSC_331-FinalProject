@@ -8,4 +8,7 @@ public interface GameEntity {
     void draw(SpriteBatch batch);
     //  TO-DO: Will need this later for player-enemy collision
     Rectangle getBounds();
+    float getHealth();
+    void modifyHealth(float amount);
+    void dispose();
 }

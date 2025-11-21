@@ -16,13 +16,10 @@ import com.badlogic.gdx.utils.Array; // libGDX array type for frames
  * Player class manages player animations, movement, and attack sequence / range. Used within the main method
  * to create a new player object.
  */
-public class Player implements GameEntity {
+public class Player {
     // final world-space size for the player sprite
     private final float width; // player's width in world units
     private final float height; // player's height in world units
-
-    // health placeholder
-    private int health;
 
     // position and motion vectors
     private final Vector2 position; // bottom-left world position of the player
@@ -51,6 +48,7 @@ public class Player implements GameEntity {
     private String direction; // "up", "down", "left", "right"
     private boolean isWalking; // walking flag
     private boolean isAttacking; // attacking flag
+    private float damage;
 
     // arrays storing loaded textures so they can be disposed later
     private final Array<Texture> idleAnimationTextures;
@@ -69,6 +67,8 @@ public class Player implements GameEntity {
 
     // constructor: initialize position, vectors, sizes and load animations
     public Player(float x, float y) {
+        // health placeholder
+        this.damage = 50f;
         this.position = new Vector2(x,y); // set initial position
         this.velocity = new Vector2(0, 0); // start stationary
         this.speed = 100f; // default speed (world units / second)
@@ -211,7 +211,6 @@ public class Player implements GameEntity {
     }
 
     // draw the current animation frame using the supplied SpriteBatch
-    @Override
     public void draw(SpriteBatch spriteBatch){
         Animation<TextureRegion> currentAnimation = idleDownAnimation; // default animation
 
@@ -262,10 +261,9 @@ public class Player implements GameEntity {
         spriteBatch.draw(currentFrame, this.position.x, this.position.y, width, height);
     }
 
-    // update: handle input, move, resolve collisions and clamp to world bounds
-    @Override
+    // check: handle input, move, resolve collisions and clamp to world bounds
     public void update(float delta, float worldWidth, float worldHeight){
-        handleInput(); // update velocity based on keyboard
+        handleInput(); // check velocity based on keyboard
 
         Vector2 previous = new Vector2(this.position); // copy previous position for fallback
 
@@ -320,7 +318,7 @@ public class Player implements GameEntity {
         this.position.x = MathUtils.clamp(this.position.x, 0, worldWidth - width);
         this.position.y = MathUtils.clamp(this.position.y, 0, worldHeight - height);
 
-        // update the attack bounds
+        // check the attack bounds
         updateAttackBounds();
 
         // advance animation time
@@ -368,7 +366,7 @@ public class Player implements GameEntity {
         return null; // nothing blocked in sampled points
     }
 
-    // update velocity based on keyboard input; sets state flags and direction accordingly
+    // check velocity based on keyboard input; sets state flags and direction accordingly
     private void handleInput(){
         this.velocity.set(0, 0); // default to no movement each frame
         this.isWalking = false;
@@ -459,7 +457,6 @@ public class Player implements GameEntity {
     }
 
     // returns a Rectangle representing the player's bounds in world coordinates
-    @Override
     public Rectangle getBounds(){
         return new Rectangle(this.position.x,this.position.y,width,height);
     }
@@ -476,18 +473,26 @@ public class Player implements GameEntity {
         return this.isAttacking;
     }
 
+    // returns the players current attack bounds.
+
     public Rectangle getPlayerAttackBounds() {
         return this.playerAttackBounds;
     }
 
-
-    public int getKillcount(){
+    // gets the number of enemies the player has killed
+    public int getKillCount(){
         return this.killCount;
     }
+
+    public float getDamage(){
+        return this.damage;
+    }
+
+    //sets the players kill count.
     public void setKillCount(int killCount){
         this.killCount = killCount;
     }
-
+    // adds 1 to the players kill count.
     public void incrementKillCounter(int kills){
         this.killCount += 1;
     }

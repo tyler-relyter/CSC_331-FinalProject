@@ -17,7 +17,6 @@ public class GameObject {
     private float unitScale;
 
     public GameObject(MapObject obj, float unitScale) {
-        this.gameObject = gameObject;
         this.unitScale = unitScale;
         this.bounds = calculateBounds();
         this.blocked = getBlockedProperty();
