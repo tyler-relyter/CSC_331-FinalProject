@@ -62,7 +62,7 @@ public class Player {
     public final Rectangle playerAttackBounds; //hitbox for the attack
     private static final float ATTACK_REACH = 10f; //how far attack extends (in world units)
 
-
+    private DamageLogic damageLogic;
     private int killCount;
 
     // constructor: initialize position, vectors, sizes and load animations
@@ -394,6 +394,7 @@ public class Player {
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
             // attack action (stops walking)
+
             this.isWalking = false;
             this.isAttacking = true;
         }

@@ -13,4 +13,6 @@ public interface GameEntity {
     void dispose();
     void setIsAlive(boolean isAlive);
     boolean getIsAlive();
+    void setDeathHandled(boolean isDeathHandled);
+    boolean getDeathHandled();
 }
