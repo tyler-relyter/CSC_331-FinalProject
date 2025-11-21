@@ -66,7 +66,7 @@ public class Player {
     private int killCount;
 
     // constructor: initialize position, vectors, sizes and load animations
-    public Player(float x, float y, DamageLogic damageLogic) {
+    public Player(float x, float y) {
         // health placeholder
         this.damage = 50f;
         this.position = new Vector2(x,y); // set initial position

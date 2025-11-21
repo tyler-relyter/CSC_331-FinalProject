@@ -18,6 +18,7 @@ public abstract class Enemy implements GameEntity {
     protected Player target; // player to chase
     private float health;
     private boolean isAlive;
+    private boolean deathHandled;
 
 
     private static final float COLLISION_PADDING = 0.05f;
@@ -37,6 +38,7 @@ public abstract class Enemy implements GameEntity {
 
         this.target = target;
         this.stateTime = 0f;
+        this.deathHandled = false;
 
         // DO NOT load a specific texture here.
         // Each subclass should set its own texture in its constructor.
@@ -165,6 +167,16 @@ public abstract class Enemy implements GameEntity {
     @Override
     public void modifyHealth(float amount){
         this.health += amount;
+    }
+
+    @Override
+    public void setDeathHandled(boolean isDeathHandled){
+        this.deathHandled = true;
+    }
+
+    @Override
+    public boolean getDeathHandled(){
+        return this.deathHandled;
     }
 
     @Override
