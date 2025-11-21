@@ -20,6 +20,7 @@ public class DamageLogic {
             enemy.modifyHealth(-(player.getDamage()));
             if (enemy.getHealth() <= 0){
                 enemy.dispose();
+                enemy.setIsAlive(false);
             }
         }
     }

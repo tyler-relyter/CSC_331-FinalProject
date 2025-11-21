@@ -17,6 +17,7 @@ public abstract class Enemy implements GameEntity {
     protected Map map;
     protected Player target; // player to chase
     private float health;
+    private boolean isAlive;
 
 
     private static final float COLLISION_PADDING = 0.05f;
@@ -32,6 +33,7 @@ public abstract class Enemy implements GameEntity {
         this.height = 15f;
 
         this.health = 100f;
+        this.isAlive = true;
 
         this.target = target;
         this.stateTime = 0f;
@@ -172,6 +174,17 @@ public abstract class Enemy implements GameEntity {
 
     public float getX() { return position.x; }
     public float getY() { return position.y; }
+
+    @Override
+    public boolean getIsAlive(){
+        return isAlive;
+    }
+
+    @Override
+    public void setIsAlive(boolean isAlive){
+        this.isAlive = isAlive;
+    }
+
 
     @Override
     public void dispose() {

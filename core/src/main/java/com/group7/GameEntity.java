@@ -11,4 +11,6 @@ public interface GameEntity {
     float getHealth();
     void modifyHealth(float amount);
     void dispose();
+    void setIsAlive(boolean isAlive);
+    boolean getIsAlive();
 }
