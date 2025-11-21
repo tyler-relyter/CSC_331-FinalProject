@@ -65,11 +65,14 @@ public class MainEntry extends Game {
         player = new Player(worldWidth / 2f, worldHeight / 2f);
         player.setMap(gameMap); // attach map to player so collisions work
 
+        //creates a new basic enemy and sets the position with the map.
         enemy = new BasicEnemy(worldWidth / 2f + 20f, worldHeight / 2f, player);
         enemy.setMap(gameMap);
 
+        // add the enemy to the array of entities being loaded into the game.
         entities.add(enemy);
 
+        // Logic to check the damage between the player and enemy.
         gameDamageLogic = new DamageLogic(player, enemy);
     }
 
@@ -77,6 +80,7 @@ public class MainEntry extends Game {
     public void render(){
         float delta = Gdx.graphics.getDeltaTime(); // compute elapsed time since last frame
 
+        // Makes the game logic check every frame that is rendered.
         gameDamageLogic.update();
 
         if (!gatesUnlocked && player.getKillCount() == 1){
@@ -124,6 +128,7 @@ public class MainEntry extends Game {
         float w = player.playerAttackBounds.width;
         float h = player.playerAttackBounds.height;
 
+        // The rectangle that is in front of the player
         tempRect.rect(x, y, w, h);
         tempRect.end();
 

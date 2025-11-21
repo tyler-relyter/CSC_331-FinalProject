@@ -475,7 +475,6 @@ public class Player {
     }
 
     // returns the players current attack bounds.
-
     public Rectangle getPlayerAttackBounds() {
         return this.playerAttackBounds;
     }
@@ -485,6 +484,7 @@ public class Player {
         return this.killCount;
     }
 
+    // gets the player's damage to use in calculations
     public float getDamage(){
         return this.damage;
     }
@@ -493,14 +493,22 @@ public class Player {
     public void setKillCount(int killCount){
         this.killCount = killCount;
     }
+
     // adds 1 to the players kill count.
     public void incrementKillCounter(){
         this.killCount += 1;
     }
+
     // dispose loaded textures to free GPU memory
     public void dispose(){
         for (Texture texture: idleAnimationTextures){
-            texture.dispose(); // dispose each idle texture
+            texture.dispose();// dispose each idle texture
+        }
+        for (Texture texture: attackAnimationTextures){
+            texture.dispose();
+        }
+        for (Texture texture: walkAnimationTextures) {
+            texture.dispose();
         }
         // walk and attack arrays were allocated but not tracked for disposal in this file;
         // if textures were added to them, dispose them here (kept minimal to match original).

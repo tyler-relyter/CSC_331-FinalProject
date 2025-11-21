@@ -179,6 +179,7 @@ public abstract class Enemy implements GameEntity {
         return this.deathHandled;
     }
 
+    //Gets enemy bounds.
     @Override
     public Rectangle getBounds() {
         return new Rectangle(position.x, position.y, width, height);
