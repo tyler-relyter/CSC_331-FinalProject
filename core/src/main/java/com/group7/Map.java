@@ -422,7 +422,7 @@ public class Map {
      * This allows dynamic modification of collision properties at runtime.
      *
      */
-    public void unlockGates() {
+    public void unlockBossGate() {
         if (objectsLayer != null && objectsLayer.getObjects() != null) {
             for (MapObject obj : objectsLayer.getObjects()) {
                 MapProperties props = obj.getProperties();

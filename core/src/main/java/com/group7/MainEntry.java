@@ -84,7 +84,7 @@ public class MainEntry extends Game {
         gameDamageLogic.update();
 
         if (!gatesUnlocked && player.getKillCount() == 1){
-            gameMap.unlockGates();
+            gameMap.unlockBossGate();
             gatesUnlocked = true;
         }
 
@@ -119,7 +119,7 @@ public class MainEntry extends Game {
 
 
         //render a temporary rectangle object to show the players attack range for testing
-        ShapeRenderer tempRect = new ShapeRenderer();
+        ShapeRenderer tempRect = new ShapeRenderer();  // please destroy this after testing (creates memory leak if not disposed)
         tempRect.begin(ShapeRenderer.ShapeType.Line);
         tempRect.setColor(Color.WHITE);
         tempRect.setProjectionMatrix(camera.combined);
