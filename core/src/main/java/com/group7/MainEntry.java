@@ -34,6 +34,8 @@ public class MainEntry extends Game {
 
     private DamageLogic gameDamageLogic;
 
+    private boolean gatesUnlocked = false; // default gates locked at start
+
     private static SpriteBatch spriteBatch; // shared sprite batch for drawing sprites
     private BitmapFont font; // font for debugging or HUD text
 
@@ -76,6 +78,11 @@ public class MainEntry extends Game {
         float delta = Gdx.graphics.getDeltaTime(); // compute elapsed time since last frame
 
         gameDamageLogic.update();
+
+        if (!gatesUnlocked && player.getKillCount() == 1){
+            gameMap.unlockGates();
+            gatesUnlocked = true;
+        }
 
         for (GameEntity entity : entities) {
             entity.update(delta, worldWidth, worldHeight);

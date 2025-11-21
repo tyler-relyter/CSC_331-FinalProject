@@ -8,6 +8,7 @@ public class DamageLogic {
     private final GameEntity enemy;
 
 
+
     public DamageLogic(Player player, GameEntity enemy) {
         this.player = player;
         this.enemy = enemy;
