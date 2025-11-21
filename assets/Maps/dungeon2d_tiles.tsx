@@ -24,18 +24,39 @@
    <property name="blocked" type="bool" value="true"/>
   </properties>
   <image source="Tiles/tile_0076.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" name="gate" x="1" y="1" width="15" height="15">
+    <properties>
+     <property name="blocked" type="bool" value="true"/>
+    </properties>
+   </object>
+  </objectgroup>
  </tile>
  <tile id="7" type="gate">
   <properties>
    <property name="blocked" type="bool" value="true"/>
   </properties>
   <image source="Tiles/tile_0077.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" name="gate" x="0" y="1" width="16" height="15">
+    <properties>
+     <property name="blocked" type="bool" value="true"/>
+    </properties>
+   </object>
+  </objectgroup>
  </tile>
  <tile id="8" type="gate">
   <properties>
    <property name="blocked" type="bool" value="true"/>
   </properties>
   <image source="Tiles/tile_0078.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" name="gate" x="0" y="1" width="15" height="15">
+    <properties>
+     <property name="blocked" type="bool" value="true"/>
+    </properties>
+   </object>
+  </objectgroup>
  </tile>
  <tile id="9">
   <image source="Tiles/tile_0079.png" width="16" height="16"/>
@@ -410,6 +431,9 @@
   <image source="Tiles/tile_0040.png" width="16" height="16"/>
  </tile>
  <tile id="103">
+  <properties>
+   <property name="blocked" type="bool" value="true"/>
+  </properties>
   <image source="Tiles/tile_0041.png" width="16" height="16"/>
  </tile>
  <tile id="104">
@@ -485,6 +509,9 @@
   <image source="Tiles/tile_0059.png" width="16" height="16"/>
  </tile>
  <tile id="122">
+  <properties>
+   <property name="healthRegen" type="bool" value="true"/>
+  </properties>
   <image source="Tiles/tile_0060.png" width="16" height="16"/>
  </tile>
  <tile id="123">

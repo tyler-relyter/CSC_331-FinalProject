@@ -1,52 +1,170 @@
 package com.group7;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class Enemy {
-    private final float width;
-    private final float height;
+public abstract class Enemy implements GameEntity {
 
-    private Vector2 position; //sets enemy position
-    private Rectangle damageArea; //rectangle for the enemy "hitbox"
+    protected Vector2 position;
+    protected Vector2 velocity;
+    protected float width;
+    protected float height;
+    protected float speed;
+    protected Map map;
+    protected Player target; // player to chase
 
-    private float health;
-    private Texture enemyTexture;
-    private Sprite enemySprite;
+
+    private static final float COLLISION_PADDING = 0.05f;
+
+    protected float stateTime;
+    protected Texture texture;
+
+    public Enemy(float x, float y, Player target) {
+        this.position = new Vector2(x, y);
+        this.velocity = new Vector2(0, 0);
+        this.speed = 60f;      // a bit slower than the player so it feels fair
+        this.width = 15f;
+        this.height = 15f;
+
+        this.target = target;
+        this.stateTime = 0f;
+
+        // DO NOT load a specific texture here.
+        // Each subclass should set its own texture in its constructor.
+        this.texture = null;
 
 
-    private Map map;
-
-    public Enemy(float x, float y){
-       this.width = 15f;
-       this.height = 15f;
-       this.position  = new Vector2(x, y); //sets position of the enemy on the map
-       this.damageArea = new Rectangle();
-       this.enemyTexture = new Texture(Gdx.files.internal("Enemy/test_enemy.png"));
-       this.enemySprite = new Sprite(enemyTexture);
     }
-    public void setMap(Map map){
+
+    public void setMap(Map map) {
         this.map = map;
     }
 
-    public void update(){
+    /** Basic AI: set velocity toward the player. */
+    protected abstract void updateAI(float delta);
 
+
+    /**
+     * Update movement + collision.
+     * This is basically your Player.update() movement code,
+     * but driven by updateAI() instead of keyboard.
+     */
+    @Override
+    public void update(float delta, float worldWidth, float worldHeight) {
+        // AI decides velocity
+        updateAI(delta);
+
+        Vector2 previous = new Vector2(this.position);
+
+        float dx = this.velocity.x * delta;
+        float dy = this.velocity.y * delta;
+
+        // ---- X-axis move + collision (same style as Player) ----
+        this.position.x += dx;
+        if (map != null) {
+            int[] blocked = findFirstBlockedTileForBounds();
+            if (blocked != null) {
+                float visualScale = map.getVisualScale();
+                int tx = blocked[0];
+                float tileStartX = tx * visualScale;
+                float tileEndX = tileStartX + visualScale;
+                if (dx > 0) {
+                    this.position.x = tileStartX - this.width - COLLISION_PADDING;
+                } else if (dx < 0) {
+                    this.position.x = tileEndX + COLLISION_PADDING;
+                } else {
+                    this.position.x = previous.x;
+                }
+            }
+        }
+
+        // ---- Y-axis move + collision ----
+        this.position.y += dy;
+        if (map != null) {
+            int[] blocked = findFirstBlockedTileForBounds();
+            if (blocked != null) {
+                float visualScale = map.getVisualScale();
+                int ty = blocked[1];
+                float tileStartY = ty * visualScale;
+                float tileEndY = tileStartY + visualScale;
+                if (dy > 0) {
+                    this.position.y = tileStartY - this.height - COLLISION_PADDING;
+                } else if (dy < 0) {
+                    this.position.y = tileEndY + COLLISION_PADDING;
+                } else {
+                    this.position.y = previous.y;
+                }
+            }
+        }
+
+        // clamp to world bounds like Player
+        this.position.x = MathUtils.clamp(this.position.x, 0, worldWidth - width);
+        this.position.y = MathUtils.clamp(this.position.y, 0, worldHeight - height);
+
+        stateTime += delta;
     }
 
-    public void draw(SpriteBatch spriteBatch){
-        spriteBatch.draw(enemyTexture, this.position.x,this.position.y);
+    /** Same idea as Player.findFirstBlockedTileForBounds(), reused. */
+    private int[] findFirstBlockedTileForBounds() {
+        if (map == null) return null;
+
+        float left = this.position.x;
+        float right = this.position.x + this.width;
+        float bottom = this.position.y;
+        float top = this.position.y + this.height;
+        float centerX = this.position.x + this.width * 0.5f;
+        float centerY = this.position.y + this.height * 0.5f;
+
+        float[] samples = new float[] {
+            left, bottom,
+            right, bottom,
+            left, top,
+            right, top,
+            centerX, centerY
+        };
+
+        for (int i = 0; i < samples.length; i += 2) {
+            float sx = samples[i];
+            float sy = samples[i + 1];
+            try {
+                if (map.isBlocked(sx, sy)) {
+                    int tileX = (int) Math.floor(sx / map.getVisualScale());
+                    int tileY = (int) Math.floor(sy / map.getVisualScale());
+                    return new int[]{tileX, tileY};
+                }
+            } catch (Exception e) {
+                int tileX = (int) Math.floor(sx / map.getVisualScale());
+                int tileY = (int) Math.floor(sy / map.getVisualScale());
+                return new int[]{tileX, tileY};
+            }
+        }
+
+        return null;
     }
 
-    public float getPositionX(){
-        return this.position.x;
-    }
-    public float getPositionY(){
-        return this.position.y;
+    /** Draw enemy sprite. */
+    @Override
+    public void draw(SpriteBatch batch) {
+        if (texture != null) {                     // *** safer
+            batch.draw(texture, position.x, position.y, width, height);
+        }
     }
 
+    @Override
+    public Rectangle getBounds() {
+        return new Rectangle(position.x, position.y, width, height);
+    }
+
+    public float getX() { return position.x; }
+    public float getY() { return position.y; }
+
+    public void dispose() {
+        if (texture != null) {
+            texture.dispose();
+        }
+    }
 }

@@ -3,8 +3,9 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "survival2d_knockoff.tmx",
     "expandedProjectPaths": [
+        "."
     ],
     "fileStates": {
         "dungeon2D.tsx": {
@@ -12,7 +13,17 @@
             "scaleInEditor": 1
         },
         "dungeon2d_tiles.tsx": {
-            "dynamicWrapping": true
+            "dynamicWrapping": true,
+            "scaleInDock": 2,
+            "scaleInEditor": 3
+        },
+        "survival2d_knockoff.tmx": {
+            "scale": 3.6159375,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 403.62976406533585,
+                "y": 487.8402903811253
+            }
         }
     },
     "last.exportedFilePath": "C:/Users/hytyl/Downloads/WhiteoutSurivivalKnockoff/CSC_331-FinalProject/assets/Maps",
@@ -23,10 +34,14 @@
     "map.tileHeight": 16,
     "map.tileWidth": 16,
     "openFiles": [
+        "survival2d_knockoff.tmx",
+        "dungeon2d_tiles.tsx"
     ],
     "project": "SurvivalKnockoff.tiled-project",
     "property.type": "bool",
     "recentFiles": [
+        "dungeon2d_tiles.tsx",
+        "survival2d_knockoff.tmx",
         "dungeon2D.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",

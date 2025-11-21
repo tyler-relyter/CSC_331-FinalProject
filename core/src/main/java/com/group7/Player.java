@@ -16,7 +16,7 @@ import com.badlogic.gdx.utils.Array; // libGDX array type for frames
  * Player class manages player animations, movement, and attack sequence / range. Used within the main method
  * to create a new player object.
  */
-public class Player {
+public class Player implements GameEntity {
     // final world-space size for the player sprite
     private final float width; // player's width in world units
     private final float height; // player's height in world units
@@ -69,9 +69,9 @@ public class Player {
         this.position = new Vector2(x,y); // set initial position
         this.velocity = new Vector2(0, 0); // start stationary
         this.speed = 100f; // default speed (world units / second)
-        this.stateTime = 0f; // start animation timer at zero
-        this.direction = "down"; // default facing direction
-        this.isWalking = false; // not walking initially
+        this.stateTime = 0f;      // start animation timer at zero
+        this.direction = "down";  // default facing direction
+        this.isWalking = false;   // not walking initially
         this.isAttacking = false; // not attacking initially
 
         // set a fixed world-unit size for the player (keeps sprite visually consistent)
@@ -207,6 +207,7 @@ public class Player {
     }
 
     // draw the current animation frame using the supplied SpriteBatch
+    @Override
     public void draw(SpriteBatch spriteBatch){
         Animation<TextureRegion> currentAnimation = idleDownAnimation; // default animation
 
@@ -258,6 +259,7 @@ public class Player {
     }
 
     // update: handle input, move, resolve collisions and clamp to world bounds
+    @Override
     public void update(float delta, float worldWidth, float worldHeight){
         handleInput(); // update velocity based on keyboard
 
@@ -452,6 +454,7 @@ public class Player {
     }
 
     // returns a Rectangle representing the player's bounds in world coordinates
+    @Override
     public Rectangle getBounds(){
         return new Rectangle(this.position.x,this.position.y,width,height);
     }

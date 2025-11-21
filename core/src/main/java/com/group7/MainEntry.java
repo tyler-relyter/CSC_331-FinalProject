@@ -11,8 +11,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils; // screen clearing helpers
 import com.badlogic.gdx.utils.viewport.*; // viewport types used to handle resizing
+import com.badlogic.gdx.utils.Array;
 
-import java.awt.*;
 
 public class MainEntry extends Game {
     private OrthographicCamera camera; // camera used for map and sprite rendering
@@ -30,7 +30,8 @@ public class MainEntry extends Game {
     private float worldHeight; // world height in world units
 
     private Player player; // player instance
-    private Enemy testEnemy; // enemy instance
+    private BasicEnemy enemy; // Enemy instance
+    private Array<GameEntity> entities;
 
     private static SpriteBatch spriteBatch; // shared sprite batch for drawing sprites
     private BitmapFont font; // font for debugging or HUD text
@@ -60,15 +61,23 @@ public class MainEntry extends Game {
         player = new Player(worldWidth / 2f, worldHeight / 2f);
         player.setMap(gameMap); // attach map to player so collisions work
 
-        testEnemy = new Enemy(worldWidth/2f, worldHeight/2f);
-        testEnemy.setMap(gameMap);
+        // create the enemy
+        enemy = new BasicEnemy(worldWidth / 2f + 20f, worldHeight / 2f, player);
+        enemy.setMap(gameMap);
 
+
+        entities = new Array<>();
+        entities.add(player);
+        entities.add(enemy);
     }
 
     @Override
     public void render(){
         float delta = Gdx.graphics.getDeltaTime(); // compute elapsed time since last frame
-        player.update(delta, worldWidth, worldHeight); // update player (movement, collisions)
+
+        for (GameEntity entity : entities) {
+            entity.update(delta, worldWidth, worldHeight);
+        }
 
         ScreenUtils.clear(Color.BLACK); // clear screen to black
         viewport.apply(); // apply viewport transforms to gl viewport
@@ -81,8 +90,11 @@ public class MainEntry extends Game {
         // Then render player and other sprites using the shared SpriteBatch
         spriteBatch.setProjectionMatrix(camera.combined); // align batch with camera
         spriteBatch.begin(); // begin drawing sprites
-        player.draw(spriteBatch); // draw player
-        testEnemy.draw(spriteBatch); // draw test enemy
+
+        for (GameEntity entity : entities) { // draw entities
+            entity.draw(spriteBatch);
+        }
+
         spriteBatch.end(); // finish sprite drawing
 
         //update enemies here, if we had any :/ *insert timmy turners dad in front of a trophy case meme here*
@@ -127,6 +139,7 @@ public class MainEntry extends Game {
         spriteBatch.dispose(); // free sprite batch GPU resources
         font.dispose(); // dispose font
         if (player != null) player.dispose(); // dispose player resources (textures)
+        if (enemy != null) enemy.dispose(); // dispose of enemey resources
         if (gameMap != null) gameMap.dispose(); // dispose map and renderer
     }
 }
