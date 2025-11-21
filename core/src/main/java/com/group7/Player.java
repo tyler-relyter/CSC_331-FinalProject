@@ -493,7 +493,7 @@ public class Player {
         this.killCount = killCount;
     }
     // adds 1 to the players kill count.
-    public void incrementKillCounter(int kills){
+    public void incrementKillCounter(){
         this.killCount += 1;
     }
     // dispose loaded textures to free GPU memory

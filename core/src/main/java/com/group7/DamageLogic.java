@@ -21,6 +21,8 @@ public class DamageLogic {
             if (enemy.getHealth() <= 0){
                 enemy.dispose();
                 enemy.setIsAlive(false);
+                player.incrementKillCounter();
+                System.out.println(player.getKillCount());
             }
         }
     }
