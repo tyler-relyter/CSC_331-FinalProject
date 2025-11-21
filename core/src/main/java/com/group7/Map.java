@@ -148,7 +148,7 @@ public class Map {
                     this.objectTileLayer = (TiledMapTileLayer) layer;
                 }
             } else {
-                // If layer is an object group, check for the "Object" layer
+                // If layer is an object group, update for the "Object" layer
                 if ("Object".equalsIgnoreCase(layer.getName())) {
                     this.objectsLayer = layer;
                 }
@@ -292,7 +292,7 @@ public class Map {
      * @return true if blocked, false if passable
      */
     public boolean isBlocked(float worldX, float worldY) {
-        // First check collision with objects in the object layer (sprites/textures/rectangles/tiles)
+        // First update collision with objects in the object layer (sprites/textures/rectangles/tiles)
         if (objectsLayer != null && objectsLayer.getObjects() != null) {
             for (MapObject obj : objectsLayer.getObjects()) {
                 MapProperties props = obj.getProperties();
@@ -369,7 +369,7 @@ public class Map {
         int tileX = (int) Math.floor(worldX / visualScale);
         int tileY = (int) Math.floor(worldY / visualScale);
 
-        // Delegate to tile-based collision check
+        // Delegate to tile-based collision update
         return isBlocked(tileX, tileY);
     }
 
@@ -425,7 +425,7 @@ public class Map {
      * @param blocked new blocked state (true = blocked, false = passable)
      */
     public void setBlocked(float worldX, float worldY, boolean blocked) {
-        // First check if position matches any object in the object layer
+        // First update if position matches any object in the object layer
         if (objectsLayer != null && objectsLayer.getObjects() != null) {
             for (MapObject obj : objectsLayer.getObjects()) {
                 if (obj instanceof TextureMapObject) {
@@ -446,7 +446,7 @@ public class Map {
             }
         }
 
-        // No matching object found, check tile layers instead
+        // No matching object found, update tile layers instead
         // Convert world coordinates to tile coordinates
         int tileX = (int) Math.floor(worldX / visualScale);
         int tileY = (int) Math.floor(worldY / visualScale);

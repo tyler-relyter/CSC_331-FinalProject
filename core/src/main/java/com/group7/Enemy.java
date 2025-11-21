@@ -1,6 +1,5 @@
 package com.group7;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -9,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public abstract class Enemy implements GameEntity {
 
+
     protected Vector2 position;
     protected Vector2 velocity;
     protected float width;
@@ -16,6 +16,8 @@ public abstract class Enemy implements GameEntity {
     protected float speed;
     protected Map map;
     protected Player target; // player to chase
+    private float health;
+    private boolean isAlive;
 
 
     private static final float COLLISION_PADDING = 0.05f;
@@ -29,6 +31,9 @@ public abstract class Enemy implements GameEntity {
         this.speed = 60f;      // a bit slower than the player so it feels fair
         this.width = 15f;
         this.height = 15f;
+
+        this.health = 100f;
+        this.isAlive = true;
 
         this.target = target;
         this.stateTime = 0f;
@@ -154,6 +159,14 @@ public abstract class Enemy implements GameEntity {
         }
     }
 
+    @Override public float getHealth(){
+        return this.health;
+    }
+    @Override
+    public void modifyHealth(float amount){
+        this.health += amount;
+    }
+
     @Override
     public Rectangle getBounds() {
         return new Rectangle(position.x, position.y, width, height);
@@ -162,6 +175,18 @@ public abstract class Enemy implements GameEntity {
     public float getX() { return position.x; }
     public float getY() { return position.y; }
 
+    @Override
+    public boolean getIsAlive(){
+        return isAlive;
+    }
+
+    @Override
+    public void setIsAlive(boolean isAlive){
+        this.isAlive = isAlive;
+    }
+
+
+    @Override
     public void dispose() {
         if (texture != null) {
             texture.dispose();

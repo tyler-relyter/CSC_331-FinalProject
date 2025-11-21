@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color; // color constants
 import com.badlogic.gdx.graphics.OrthographicCamera; // camera used to render world
 import com.badlogic.gdx.graphics.g2d.BitmapFont; // simple font for UI/debug text
 import com.badlogic.gdx.graphics.g2d.SpriteBatch; // main batch for drawing sprites
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils; // screen clearing helpers
 import com.badlogic.gdx.utils.viewport.*; // viewport types used to handle resizing
 import com.badlogic.gdx.utils.Array;
@@ -30,6 +31,8 @@ public class MainEntry extends Game {
     private Player player; // player instance
     private BasicEnemy enemy; // Enemy instance
     private Array<GameEntity> entities;
+
+    private DamageLogic gameDamageLogic;
 
     private static SpriteBatch spriteBatch; // shared sprite batch for drawing sprites
     private BitmapFont font; // font for debugging or HUD text
@@ -55,23 +58,24 @@ public class MainEntry extends Game {
         worldWidth = gameMap.getWorldWidthTiles() * mapVisualScale; // tiles * visual scale => world units
         worldHeight = gameMap.getWorldHeightTiles() * mapVisualScale; // same for height
 
+        entities = new Array<>();
         // create player centered in the world initially
         player = new Player(worldWidth / 2f, worldHeight / 2f);
         player.setMap(gameMap); // attach map to player so collisions work
 
-        // create the enemy
         enemy = new BasicEnemy(worldWidth / 2f + 20f, worldHeight / 2f, player);
         enemy.setMap(gameMap);
 
-
-        entities = new Array<>();
-        entities.add(player);
         entities.add(enemy);
+
+        gameDamageLogic = new DamageLogic(player, enemy);
     }
 
     @Override
     public void render(){
         float delta = Gdx.graphics.getDeltaTime(); // compute elapsed time since last frame
+
+        gameDamageLogic.update();
 
         for (GameEntity entity : entities) {
             entity.update(delta, worldWidth, worldHeight);
@@ -85,15 +89,38 @@ public class MainEntry extends Game {
         // Render tiled map first so sprites appear above it
         gameMap.render(camera); // mapRenderer draws the map using provided camera
 
+        player.update(delta, worldWidth, worldHeight);
         // Then render player and other sprites using the shared SpriteBatch
         spriteBatch.setProjectionMatrix(camera.combined); // align batch with camera
         spriteBatch.begin(); // begin drawing sprites
+        player.draw(spriteBatch); //draws the player
 
-        for (GameEntity entity : entities) { // draw entities
-            entity.draw(spriteBatch);
+        for (GameEntity entity : entities) { // draw entities if alive, else stop drawing.
+            if (entity.getIsAlive()){
+                entity.draw(spriteBatch);
+            }
         }
-
         spriteBatch.end(); // finish sprite drawing
+
+        //update enemies here, if we had any :/ *insert timmy turners dad in front of a trophy case meme here*
+
+
+
+
+        //render a temporary rectangle object to show the players attack range for testing
+        ShapeRenderer tempRect = new ShapeRenderer();
+        tempRect.begin(ShapeRenderer.ShapeType.Line);
+        tempRect.setColor(Color.WHITE);
+        tempRect.setProjectionMatrix(camera.combined);
+        float x = player.playerAttackBounds.x;
+        float y = player.playerAttackBounds.y;
+        float w = player.playerAttackBounds.width;
+        float h = player.playerAttackBounds.height;
+
+        tempRect.rect(x, y, w, h);
+        tempRect.end();
+
+
     }
 
     // camera follows player with a small offset to keep player inside viewport center-ish
@@ -106,6 +133,7 @@ public class MainEntry extends Game {
     public void resize(int width, int height){
         viewport.update(width, height); // forward resize to the viewport
     }
+
 
     @Override
     public void dispose(){
