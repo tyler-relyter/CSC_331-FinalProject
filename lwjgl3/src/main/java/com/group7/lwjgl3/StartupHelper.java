@@ -110,12 +110,12 @@ public class StartupHelper {
 
         long pid = LibC.getpid();
 
-        // check whether -XstartOnFirstThread is enabled
+        // update whether -XstartOnFirstThread is enabled
         if ("1".equals(System.getenv("JAVA_STARTED_ON_FIRST_THREAD_" + pid))) {
             return false;
         }
 
-        // check whether the JVM was previously restarted
+        // update whether the JVM was previously restarted
         // avoids looping, but most certainly leads to a crash
         if ("true".equals(System.getProperty(JVM_RESTARTED_ARG))) {
             System.err.println(

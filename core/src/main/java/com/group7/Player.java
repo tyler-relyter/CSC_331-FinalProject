@@ -12,13 +12,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch; // batch used to draw sprites
 import com.badlogic.gdx.graphics.g2d.TextureRegion; // region wrapper for frames
 import com.badlogic.gdx.utils.Array; // libGDX array type for frames
 
-public class Player implements GameEntity {
+/**
+ * Player class manages player animations, movement, and attack sequence / range. Used within the main method
+ * to create a new player object.
+ */
+public class Player {
     // final world-space size for the player sprite
     private final float width; // player's width in world units
     private final float height; // player's height in world units
-
-    // health placeholder
-    private int health;
 
     // position and motion vectors
     private final Vector2 position; // bottom-left world position of the player
@@ -47,6 +48,7 @@ public class Player implements GameEntity {
     private String direction; // "up", "down", "left", "right"
     private boolean isWalking; // walking flag
     private boolean isAttacking; // attacking flag
+    private float damage;
 
     // arrays storing loaded textures so they can be disposed later
     private final Array<Texture> idleAnimationTextures;
@@ -56,8 +58,17 @@ public class Player implements GameEntity {
     // small gap to keep between player and blocked tile (world units)
     private static final float COLLISION_PADDING = 0.05f; // tweak to change visual gap
 
+    //TEMPORARILY PUBLIC WHILE I TEST THE RECTANGLE AND DRAW IT MAKE PRIVATE LATER!!!
+    public final Rectangle playerAttackBounds; //hitbox for the attack
+    private static final float ATTACK_REACH = 10f; //how far attack extends (in world units)
+
+    private DamageLogic damageLogic;
+    private int killCount;
+
     // constructor: initialize position, vectors, sizes and load animations
     public Player(float x, float y) {
+        // health placeholder
+        this.damage = 50f;
         this.position = new Vector2(x,y); // set initial position
         this.velocity = new Vector2(0, 0); // start stationary
         this.speed = 100f; // default speed (world units / second)
@@ -75,8 +86,11 @@ public class Player implements GameEntity {
         this.walkAnimationTextures = new Array<>();
         this.attackAnimationTextures = new Array<>();
 
+        this.killCount = 0;
         // load sprite frames and construct animations
         loadAnimations();
+
+        this.playerAttackBounds = new Rectangle();
     }
 
     // attach the Map instance used for collision detection and rendering alignment
@@ -90,7 +104,7 @@ public class Player implements GameEntity {
         Array<TextureRegion> idleDownFrames = new Array<>();
         for (int i = 0; i <= 5; i++){
             // load the texture file and keep a reference to dispose later
-            Texture frameTexture = new Texture(Gdx.files.internal("Characters/IdleDown/idle_down_0"+i+".png"));
+            Texture frameTexture = new Texture(Gdx.files.internal("Character/IdleDown/idle_down_0"+i+".png"));
             idleAnimationTextures.add(frameTexture); // track texture
             idleDownFrames.add(new TextureRegion(frameTexture)); // add frame region
         }
@@ -99,7 +113,7 @@ public class Player implements GameEntity {
         // idle up frames
         Array<TextureRegion> idleUpFrames = new Array<>();
         for (int i = 0; i<=5; i++){
-            Texture frameTexture = new Texture(Gdx.files.internal("Characters/IdleUp/idle_up_0"+i+".png"));
+            Texture frameTexture = new Texture(Gdx.files.internal("Character/IdleUp/idle_up_0"+i+".png"));
             idleAnimationTextures.add(frameTexture);
             idleUpFrames.add(new TextureRegion((frameTexture)));
         }
@@ -108,7 +122,7 @@ public class Player implements GameEntity {
         // idle left frames
         Array<TextureRegion> idleLeftFrames = new Array<>();
         for (int i = 0; i<=5; i++){
-            Texture frameTexture = new Texture(Gdx.files.internal("Characters/IdleLeft/idle_left_0"+i+".png"));
+            Texture frameTexture = new Texture(Gdx.files.internal("Character/IdleLeft/idle_left_0"+i+".png"));
             idleAnimationTextures.add(frameTexture);
             idleLeftFrames.add(new TextureRegion(frameTexture));
         }
@@ -117,7 +131,7 @@ public class Player implements GameEntity {
         // idle right frames
         Array<TextureRegion> idleRightFrames = new Array<>();
         for (int i = 0; i<=5; i++){
-            Texture frameTexture = new Texture(Gdx.files.internal("Characters/IdleRight/idle_right_0"+i+".png"));
+            Texture frameTexture = new Texture(Gdx.files.internal("Character/IdleRight/idle_right_0"+i+".png"));
             idleAnimationTextures.add(frameTexture);
             idleRightFrames.add(new TextureRegion(frameTexture));
         }
@@ -126,7 +140,7 @@ public class Player implements GameEntity {
         // walk down frames
         Array<TextureRegion> walkDownFrames = new Array<>();
         for (int i = 0; i<=5; i++){
-            Texture frameTexture = new Texture(Gdx.files.internal("Characters/WalkDown/walk_down_0"+i+".png"));
+            Texture frameTexture = new Texture(Gdx.files.internal("Character/WalkDown/walk_down_0"+i+".png"));
             walkAnimationTextures.add(frameTexture);
             walkDownFrames.add(new TextureRegion(frameTexture));
         }
@@ -135,7 +149,7 @@ public class Player implements GameEntity {
         // walk up frames
         Array<TextureRegion> walkUpFrames = new Array<>();
         for (int i = 0; i<=5; i++){
-            Texture frameTexture = new Texture(Gdx.files.internal("Characters/WalkUp/walk_up_0"+i+".png"));
+            Texture frameTexture = new Texture(Gdx.files.internal("Character/WalkUp/walk_up_0"+i+".png"));
             walkAnimationTextures.add(frameTexture);
             walkUpFrames.add(new TextureRegion(frameTexture));
         }
@@ -144,7 +158,7 @@ public class Player implements GameEntity {
         // walk left frames
         Array<TextureRegion> walkLeftFrames = new Array<>();
         for (int i = 0; i<=5; i++){
-            Texture frameTexture = new Texture(Gdx.files.internal("Characters/WalkLeft/walk_left_0"+i+".png"));
+            Texture frameTexture = new Texture(Gdx.files.internal("Character/WalkLeft/walk_left_0"+i+".png"));
             walkAnimationTextures.add(frameTexture);
             walkLeftFrames.add(new TextureRegion(frameTexture));
         }
@@ -153,7 +167,7 @@ public class Player implements GameEntity {
         // walk right frames
         Array<TextureRegion> walkRightFrames = new Array<>();
         for (int i = 0; i<=5; i++){
-            Texture frameTexture = new Texture(Gdx.files.internal("Characters/WalkRight/walk_right_0"+i+".png"));
+            Texture frameTexture = new Texture(Gdx.files.internal("Character/WalkRight/walk_right_0"+i+".png"));
             walkAnimationTextures.add(frameTexture);
             walkRightFrames.add(new TextureRegion(frameTexture));
         }
@@ -162,7 +176,7 @@ public class Player implements GameEntity {
         // attack up frames
         Array<TextureRegion> attackUpFrames = new Array<>();
         for (int i = 0; i <=3; i++){
-            Texture frameTexture = new Texture(Gdx.files.internal("Characters/AttackUp/attack_up_0"+i+".png"));
+            Texture frameTexture = new Texture(Gdx.files.internal("Character/AttackUp/attack_up_0"+i+".png"));
             attackAnimationTextures.add(frameTexture);
             attackUpFrames.add(new TextureRegion(frameTexture));
         }
@@ -171,7 +185,7 @@ public class Player implements GameEntity {
         // attack down frames
         Array<TextureRegion> attackDownFrames = new Array<>();
         for (int i = 0; i <=3; i++){
-            Texture frameTexture = new Texture(Gdx.files.internal("Characters/AttackDown/attack_down_0"+i+".png"));
+            Texture frameTexture = new Texture(Gdx.files.internal("Character/AttackDown/attack_down_0"+i+".png"));
             attackAnimationTextures.add(frameTexture);
             attackDownFrames.add(new TextureRegion(frameTexture));
         }
@@ -180,7 +194,7 @@ public class Player implements GameEntity {
         // attack left frames
         Array<TextureRegion> attackLeftFrames = new Array<>();
         for (int i = 0; i <=3; i++){
-            Texture frameTexture = new Texture(Gdx.files.internal("Characters/AttackLeft/attack_left_0"+i+".png"));
+            Texture frameTexture = new Texture(Gdx.files.internal("Character/AttackLeft/attack_left_0"+i+".png"));
             attackAnimationTextures.add(frameTexture);
             attackLeftFrames.add(new TextureRegion(frameTexture));
         }
@@ -189,7 +203,7 @@ public class Player implements GameEntity {
         // attack right frames
         Array<TextureRegion> attackRightFrames = new Array<>();
         for (int i = 0; i <=3; i++){
-            Texture frameTexture = new Texture(Gdx.files.internal("Characters/AttackRight/attack_right_0"+i+".png"));
+            Texture frameTexture = new Texture(Gdx.files.internal("Character/AttackRight/attack_right_0"+i+".png"));
             attackAnimationTextures.add(frameTexture);
             attackRightFrames.add(new TextureRegion(frameTexture));
         }
@@ -197,7 +211,6 @@ public class Player implements GameEntity {
     }
 
     // draw the current animation frame using the supplied SpriteBatch
-    @Override
     public void draw(SpriteBatch spriteBatch){
         Animation<TextureRegion> currentAnimation = idleDownAnimation; // default animation
 
@@ -249,7 +262,6 @@ public class Player implements GameEntity {
     }
 
     // update: handle input, move, resolve collisions and clamp to world bounds
-    @Override
     public void update(float delta, float worldWidth, float worldHeight){
         handleInput(); // update velocity based on keyboard
 
@@ -283,7 +295,7 @@ public class Player implements GameEntity {
         // Move and resolve Y axis
         this.position.y += dy; // apply vertical movement
         if (map != null) {
-            int[] blocked = findFirstBlockedTileForBounds(); // check vertical collisions
+            int[] blocked = findFirstBlockedTileForBounds(); // update vertical collisions
             if (blocked != null) {
                 float visualScale = map.getVisualScale(); // tile visual size in world units
                 int ty = blocked[1]; // blocked tile Y index
@@ -305,6 +317,9 @@ public class Player implements GameEntity {
         // clamp position so player stays inside world rectangle
         this.position.x = MathUtils.clamp(this.position.x, 0, worldWidth - width);
         this.position.y = MathUtils.clamp(this.position.y, 0, worldHeight - height);
+
+        // update the attack bounds
+        updateAttackBounds();
 
         // advance animation time
         stateTime += delta;
@@ -342,7 +357,7 @@ public class Player implements GameEntity {
                     return new int[]{tileX, tileY}; // return first blocked tile found
                 }
             } catch (Exception e) {
-                // if map check fails, still return the tile indices for the sample
+                // if map update fails, still return the tile indices for the sample
                 int tileX = (int) Math.floor(sx / map.getVisualScale());
                 int tileY = (int) Math.floor(sy / map.getVisualScale());
                 return new int[]{tileX, tileY};
@@ -354,7 +369,8 @@ public class Player implements GameEntity {
     // update velocity based on keyboard input; sets state flags and direction accordingly
     private void handleInput(){
         this.velocity.set(0, 0); // default to no movement each frame
-
+        this.isWalking = false;
+        this.isAttacking = false;
         // read directional keys and set velocity along axis
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)){
             this.isWalking = true;
@@ -378,6 +394,7 @@ public class Player implements GameEntity {
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
             // attack action (stops walking)
+
             this.isWalking = false;
             this.isAttacking = true;
         }
@@ -390,13 +407,57 @@ public class Player implements GameEntity {
         }
     }
 
+    // updates the attackBounds rectangle based on the players current direction
+    private void updateAttackBounds() {
+        float x, y, w, h;//new bounds for rectangle
+        switch (this.direction){
+            case "up":
+                //attack width will be the player's width, height of rectangle is the reach
+                w = this.width; //need to fix the up/down box region
+                h = ATTACK_REACH;
+                //positioned north of the player
+                x = this.position.x;
+                y = this.position.y + (this.height / 3); //need to position it based on players height
+                break;
+            case "down":
+                w = this.width;
+                h = ATTACK_REACH;
+                //south of the player
+                x = this.position.x;
+                y = this.position.y - (this.height / 3);
+                break;
+            case "left":
+                //attack width is the players reach, and the height of the box is player height
+                w = ATTACK_REACH;
+                h = this.height;
+                //will be positioned left of the player
+                x = this.position.x - 2f; // starts at player left, reach goes left
+                y = this.position.y;
+                break;
+            case "right": //broken
+                w = ATTACK_REACH;
+                h = this.height;
+                //positioned right of the player
+                x = this.position.x + (this.width / 2);
+                y = this.position.y;
+                break;
+            default: //default to "down"
+                w = this.width;
+                h = ATTACK_REACH;
+                x = this.position.x;
+                y = this.position.y - (this.height / 3);
+                break;
+        }
+        //set the new rectangles bounds
+        this.playerAttackBounds.set(x,y,w,h);
+    }
+
     // accessor used by camera to follow the player
     public float getBottomY(){
         return this.position.y; // bottom Y of player
     }
 
     // returns a Rectangle representing the player's bounds in world coordinates
-    @Override
     public Rectangle getBounds(){
         return new Rectangle(this.position.x,this.position.y,width,height);
     }
@@ -409,10 +470,45 @@ public class Player implements GameEntity {
         return this.position.y;
     }
 
+    public boolean isAttacking(){
+        return this.isAttacking;
+    }
+
+    // returns the players current attack bounds.
+    public Rectangle getPlayerAttackBounds() {
+        return this.playerAttackBounds;
+    }
+
+    // gets the number of enemies the player has killed
+    public int getKillCount(){
+        return this.killCount;
+    }
+
+    // gets the player's damage to use in calculations
+    public float getDamage(){
+        return this.damage;
+    }
+
+    //sets the players kill count.
+    public void setKillCount(int killCount){
+        this.killCount = killCount;
+    }
+
+    // adds 1 to the players kill count.
+    public void incrementKillCounter(){
+        this.killCount += 1;
+    }
+
     // dispose loaded textures to free GPU memory
     public void dispose(){
         for (Texture texture: idleAnimationTextures){
-            texture.dispose(); // dispose each idle texture
+            texture.dispose();// dispose each idle texture
+        }
+        for (Texture texture: attackAnimationTextures){
+            texture.dispose();
+        }
+        for (Texture texture: walkAnimationTextures) {
+            texture.dispose();
         }
         // walk and attack arrays were allocated but not tracked for disposal in this file;
         // if textures were added to them, dispose them here (kept minimal to match original).

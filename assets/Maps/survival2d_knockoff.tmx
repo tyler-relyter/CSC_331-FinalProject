@@ -11,77 +11,77 @@
   <object id="12" gid="35" x="214.992" y="237.917" width="14.338" height="13.7839"/>
   <object id="43" gid="7" x="15.2305" y="590.7" width="17.6593" height="16">
    <properties>
-    <property name="blocked" type="bool" value="false"/>
+    <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
   <object id="44" gid="8" x="31.8237" y="590.7" width="17.1062" height="16">
    <properties>
-    <property name="blocked" type="bool" value="false"/>
+    <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
   <object id="45" gid="8" x="48.4169" y="590.7" width="16" height="16">
    <properties>
-    <property name="blocked" type="bool" value="false"/>
+    <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
   <object id="46" gid="8" x="63.9039" y="590.7" width="16" height="16">
    <properties>
-    <property name="blocked" type="bool" value="false"/>
+    <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
   <object id="47" gid="8" x="79.944" y="590.7" width="16" height="16">
    <properties>
-    <property name="blocked" type="bool" value="false"/>
+    <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
   <object id="48" gid="8" x="95.9841" y="590.7" width="16" height="16">
    <properties>
-    <property name="blocked" type="bool" value="false"/>
+    <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
   <object id="49" gid="8" x="111.471" y="590.7" width="16" height="16">
    <properties>
-    <property name="blocked" type="bool" value="false"/>
+    <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
   <object id="50" gid="8" x="127.511" y="590.7" width="16" height="16">
    <properties>
-    <property name="blocked" type="bool" value="false"/>
+    <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
   <object id="51" gid="8" x="143.828" y="590.7" width="16" height="16">
    <properties>
-    <property name="blocked" type="bool" value="false"/>
+    <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
   <object id="52" gid="8" x="159.868" y="590.7" width="16" height="16">
    <properties>
-    <property name="blocked" type="bool" value="false"/>
+    <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
   <object id="53" gid="8" x="175.908" y="590.7" width="16" height="16">
    <properties>
-    <property name="blocked" type="bool" value="false"/>
+    <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
   <object id="54" gid="8" x="191.672" y="590.7" width="16" height="16">
    <properties>
-    <property name="blocked" type="bool" value="false"/>
+    <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
   <object id="55" gid="8" x="207.988" y="590.7" width="16" height="16">
    <properties>
-    <property name="blocked" type="bool" value="false"/>
+    <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
   <object id="56" gid="8" x="224.028" y="590.7" width="16" height="16">
    <properties>
-    <property name="blocked" type="bool" value="false"/>
+    <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
   <object id="57" gid="9" x="240.345" y="590.7" width="16" height="16">
    <properties>
-    <property name="blocked" type="bool" value="false"/>
+    <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
   <object id="77" gid="29" x="351.796" y="543.961" width="16" height="16"/>

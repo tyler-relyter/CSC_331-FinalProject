@@ -5,7 +5,6 @@
     },
     "activeFile": "survival2d_knockoff.tmx",
     "expandedProjectPaths": [
-        "."
     ],
     "fileStates": {
         "dungeon2D.tsx": {
@@ -19,10 +18,10 @@
         },
         "survival2d_knockoff.tmx": {
             "scale": 3.6159375,
-            "selectedLayer": 0,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 403.62976406533585,
-                "y": 487.8402903811253
+                "x": 223.73174315098095,
+                "y": 541.6299369112437
             }
         }
     },

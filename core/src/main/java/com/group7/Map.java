@@ -148,7 +148,7 @@ public class Map {
                     this.objectTileLayer = (TiledMapTileLayer) layer;
                 }
             } else {
-                // If layer is an object group, check for the "Object" layer
+                // If layer is an object group, update for the "Object" layer
                 if ("Object".equalsIgnoreCase(layer.getName())) {
                     this.objectsLayer = layer;
                 }
@@ -292,7 +292,7 @@ public class Map {
      * @return true if blocked, false if passable
      */
     public boolean isBlocked(float worldX, float worldY) {
-        // First check collision with objects in the object layer (sprites/textures/rectangles/tiles)
+        // First update collision with objects in the object layer (sprites/textures/rectangles/tiles)
         if (objectsLayer != null && objectsLayer.getObjects() != null) {
             for (MapObject obj : objectsLayer.getObjects()) {
                 MapProperties props = obj.getProperties();
@@ -369,7 +369,7 @@ public class Map {
         int tileX = (int) Math.floor(worldX / visualScale);
         int tileY = (int) Math.floor(worldY / visualScale);
 
-        // Delegate to tile-based collision check
+        // Delegate to tile-based collision update
         return isBlocked(tileX, tileY);
     }
 
@@ -418,58 +418,21 @@ public class Map {
     }
 
     /**
-     * Sets the blocked state of a tile or object at a world position
+     * Sets the blocked state of all gate objects
      * This allows dynamic modification of collision properties at runtime.
-     * @param worldX x coordinate in world units
-     * @param worldY y coordinate in world units
-     * @param blocked new blocked state (true = blocked, false = passable)
+     *
      */
-    public void setBlocked(float worldX, float worldY, boolean blocked) {
-        // First check if position matches any object in the object layer
+    public void unlockBossGate() {
         if (objectsLayer != null && objectsLayer.getObjects() != null) {
             for (MapObject obj : objectsLayer.getObjects()) {
-                if (obj instanceof TextureMapObject) {
-                    TextureMapObject tmo = (TextureMapObject) obj;
-                    TextureRegion region = tmo.getTextureRegion();
-                    if (region != null) {
-                        float objX = tmo.getX() * unitScale;
-                        float objY = tmo.getY() * unitScale;
-                        float objWidth = region.getRegionWidth() * unitScale * tmo.getScaleX();
-                        float objHeight = region.getRegionHeight() * unitScale * tmo.getScaleY();
-                        Rectangle objBounds = new Rectangle(objX, objY, objWidth, objHeight);
-                        if (objBounds.contains(worldX, worldY)) {
-                            obj.getProperties().put("blocked", blocked);
-                            return;
-                        }
-                    }
+                MapProperties props = obj.getProperties();
+                if (!props.containsKey("blocked")) {
+                    continue;
                 }
-            }
-        }
+                if (getBooleanProperty(props, "blocked", false)) {
+                    props.put("blocked", false);
+                }
 
-        // No matching object found, check tile layers instead
-        // Convert world coordinates to tile coordinates
-        int tileX = (int) Math.floor(worldX / visualScale);
-        int tileY = (int) Math.floor(worldY / visualScale);
-
-        // Ignore positions outside map bounds
-        if (tileX < 0 || tileY < 0 || tileX >= mapWidthTiles || tileY >= mapHeightTiles) {
-            return;
-        }
-
-        // Try to update blocked property on object tile layer first
-        if (objectTileLayer != null) {
-            TiledMapTileLayer.Cell cell = objectTileLayer.getCell(tileX, tileY);
-            if (cell != null && cell.getTile() != null) {
-                cell.getTile().getProperties().put("blocked", blocked);
-                return;
-            }
-        }
-
-        // Fall back to ground layer if object tile layer didn't have a tile there
-        if (groundLayer != null) {
-            TiledMapTileLayer.Cell cell = groundLayer.getCell(tileX, tileY);
-            if (cell != null && cell.getTile() != null) {
-                cell.getTile().getProperties().put("blocked", blocked);
             }
         }
     }
