@@ -19,10 +19,8 @@ public class DamageLogic {
         if (playerAttackBounds.overlaps(enemyBounds) && isPlayerAttacking){
             enemy.modifyHealth(-(player.getDamage()));
             if (enemy.getHealth() <= 0){
-                enemy.dispose();
                 enemy.setIsAlive(false);
-                player.incrementKillCounter();
-                System.out.println(player.getKillCount());
+                enemy.dispose();
             }
         }
     }
