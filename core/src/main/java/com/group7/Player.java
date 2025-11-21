@@ -64,6 +64,9 @@ public class Player implements GameEntity {
     public final Rectangle playerAttackBounds; //hitbox for the attack
     private static final float ATTACK_REACH = 10f; //how far attack extends (in world units)
 
+
+    private int killCount;
+
     // constructor: initialize position, vectors, sizes and load animations
     public Player(float x, float y) {
         this.position = new Vector2(x,y); // set initial position
@@ -83,6 +86,7 @@ public class Player implements GameEntity {
         this.walkAnimationTextures = new Array<>();
         this.attackAnimationTextures = new Array<>();
 
+        this.killCount = 0;
         // load sprite frames and construct animations
         loadAnimations();
 
@@ -367,7 +371,8 @@ public class Player implements GameEntity {
     // update velocity based on keyboard input; sets state flags and direction accordingly
     private void handleInput(){
         this.velocity.set(0, 0); // default to no movement each frame
-
+        this.isWalking = false;
+        this.isAttacking = false;
         // read directional keys and set velocity along axis
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)){
             this.isWalking = true;
@@ -475,6 +480,17 @@ public class Player implements GameEntity {
         return this.playerAttackBounds;
     }
 
+
+    public int getKillcount(){
+        return this.killCount;
+    }
+    public void setKillCount(int killCount){
+        this.killCount = killCount;
+    }
+
+    public void incrementKillCounter(int kills){
+        this.killCount += 1;
+    }
     // dispose loaded textures to free GPU memory
     public void dispose(){
         for (Texture texture: idleAnimationTextures){
