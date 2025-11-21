@@ -261,9 +261,9 @@ public class Player {
         spriteBatch.draw(currentFrame, this.position.x, this.position.y, width, height);
     }
 
-    // check: handle input, move, resolve collisions and clamp to world bounds
+    // update: handle input, move, resolve collisions and clamp to world bounds
     public void update(float delta, float worldWidth, float worldHeight){
-        handleInput(); // check velocity based on keyboard
+        handleInput(); // update velocity based on keyboard
 
         Vector2 previous = new Vector2(this.position); // copy previous position for fallback
 
@@ -295,7 +295,7 @@ public class Player {
         // Move and resolve Y axis
         this.position.y += dy; // apply vertical movement
         if (map != null) {
-            int[] blocked = findFirstBlockedTileForBounds(); // check vertical collisions
+            int[] blocked = findFirstBlockedTileForBounds(); // update vertical collisions
             if (blocked != null) {
                 float visualScale = map.getVisualScale(); // tile visual size in world units
                 int ty = blocked[1]; // blocked tile Y index
@@ -318,7 +318,7 @@ public class Player {
         this.position.x = MathUtils.clamp(this.position.x, 0, worldWidth - width);
         this.position.y = MathUtils.clamp(this.position.y, 0, worldHeight - height);
 
-        // check the attack bounds
+        // update the attack bounds
         updateAttackBounds();
 
         // advance animation time
@@ -357,7 +357,7 @@ public class Player {
                     return new int[]{tileX, tileY}; // return first blocked tile found
                 }
             } catch (Exception e) {
-                // if map check fails, still return the tile indices for the sample
+                // if map update fails, still return the tile indices for the sample
                 int tileX = (int) Math.floor(sx / map.getVisualScale());
                 int tileY = (int) Math.floor(sy / map.getVisualScale());
                 return new int[]{tileX, tileY};
@@ -366,7 +366,7 @@ public class Player {
         return null; // nothing blocked in sampled points
     }
 
-    // check velocity based on keyboard input; sets state flags and direction accordingly
+    // update velocity based on keyboard input; sets state flags and direction accordingly
     private void handleInput(){
         this.velocity.set(0, 0); // default to no movement each frame
         this.isWalking = false;

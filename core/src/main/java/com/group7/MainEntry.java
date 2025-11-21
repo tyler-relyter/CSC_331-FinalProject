@@ -65,7 +65,6 @@ public class MainEntry extends Game {
         enemy = new BasicEnemy(worldWidth / 2f + 20f, worldHeight / 2f, player);
         enemy.setMap(gameMap);
 
-
         entities.add(enemy);
 
         gameDamageLogic = new DamageLogic(player, enemy);
@@ -75,7 +74,7 @@ public class MainEntry extends Game {
     public void render(){
         float delta = Gdx.graphics.getDeltaTime(); // compute elapsed time since last frame
 
-        gameDamageLogic.check();
+        gameDamageLogic.update();
 
         for (GameEntity entity : entities) {
             entity.update(delta, worldWidth, worldHeight);
@@ -83,8 +82,8 @@ public class MainEntry extends Game {
 
         ScreenUtils.clear(Color.BLACK); // clear screen to black
         viewport.apply(); // apply viewport transforms to gl viewport
-        updateCamera(); // check camera position based on player
-        camera.update(); // check camera matrices
+        updateCamera(); // update camera position based on player
+        camera.update(); // update camera matrices
 
         // Render tiled map first so sprites appear above it
         gameMap.render(camera); // mapRenderer draws the map using provided camera
@@ -98,7 +97,7 @@ public class MainEntry extends Game {
         }
         spriteBatch.end(); // finish sprite drawing
 
-        //check enemies here, if we had any :/ *insert timmy turners dad in front of a trophy case meme here*
+        //update enemies here, if we had any :/ *insert timmy turners dad in front of a trophy case meme here*
 
 
 

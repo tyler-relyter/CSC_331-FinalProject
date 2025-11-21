@@ -53,7 +53,7 @@ public abstract class Enemy implements GameEntity {
 
     /**
      * Update movement + collision.
-     * This is basically your Player.check() movement code,
+     * This is basically your Player.update() movement code,
      * but driven by updateAI() instead of keyboard.
      */
     @Override

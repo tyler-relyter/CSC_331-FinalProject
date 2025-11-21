@@ -3,18 +3,15 @@ package com.group7;
 import com.badlogic.gdx.math.Rectangle;
 
 public class DamageLogic {
-
     private final Player player;
     private final GameEntity enemy;
-
 
     public DamageLogic(Player player, GameEntity enemy) {
         this.player = player;
         this.enemy = enemy;
     }
 
-
-    public void check() {
+    public void update() {
         boolean isPlayerAttacking = player.isAttacking();
         Rectangle playerAttackBounds = player.getPlayerAttackBounds();
         Rectangle enemyBounds = enemy.getBounds();
