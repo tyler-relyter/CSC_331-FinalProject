@@ -93,6 +93,26 @@ public class StartGUI extends ScreenAdapter {
                 Gdx.app.exit(); //exit the application
             }
         });
+
+        //Instruction for how to play on start screen
+        BitmapFont smallFont = new BitmapFont(); //small font creation
+        smallFont.getData().setScale(1.3f);
+
+        Label.LabelStyle smallLabel = new Label.LabelStyle();
+        smallLabel.font = smallFont;
+        smallLabel.fontColor = Color.LIGHT_GRAY;
+
+        //Instruction box label
+        Label instructions = new Label("       Instructions:\nArrow keys to move\nSpace bar to attack", smallLabel);
+
+        //Table at the bottom right
+        Table instructionTable = new Table();
+        instructionTable.bottom().right().pad(20);
+        instructionTable.setFillParent(true);
+        instructionTable.add(instructions);
+
+        //Add instruction box to the stage
+        stage.addActor(instructionTable);
     }
 
     @Override
