@@ -59,6 +59,9 @@ public class GameScreen extends ScreenAdapter {
     private SpriteBatch spriteBatch;
     private BitmapFont font;
 
+    //Amount of kills needed to make in order for the game to end
+    private static final int kills = 1;
+
     // Constructor accepts the parent Game to allow screen switching later.
     public GameScreen(MainEntry game) {
         this.game = game;
@@ -130,6 +133,12 @@ public class GameScreen extends ScreenAdapter {
         if (!gatesUnlocked && player.getKillCount() == 1) {
             gameMap.unlockBossGate();
             gatesUnlocked = true;
+        }
+
+        //Check if the game is over
+        if (player.getKillCount() >= kills){
+            game.setScreen(new EndGUI(game));
+            return;
         }
 
         // Update each entity (movement, AI, animations) with world bounds for clamping.

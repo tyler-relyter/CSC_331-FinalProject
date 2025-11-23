@@ -21,10 +21,10 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
  */
 public class EndGUI implements Screen {
     //Needs to change to end game gate
-    private final GameMain game; //reference to the end gate class to switch screens
+    private final MainEntry game; //reference to the end gate class to switch screens
     private Stage stage; //Stage that holds the buttons, labels, etc.
 
-    public EndGUI(GameMain game) {
+    public EndGUI(MainEntry game) {
         this.game = game;
     }
 
