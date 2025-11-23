@@ -12,26 +12,28 @@ public class DamageLogic {
     public DamageLogic(Player player, Array<GameEntity> enemies) {
         this.player = player;// player class that is on game screen
 
+        //checks every enemy that's added to the enemies game entity array
         for (GameEntity e: enemies) {
             update(e);
         }
     }
+
     public void update(GameEntity enemy) {
         boolean isPlayerAttacking = player.isAttacking();
         Rectangle playerAttackBounds = player.getPlayerAttackBounds();
         Rectangle enemyBounds = enemy.getBounds();
-
-        // for multiple enemies there should be a loop that iterates over each enemy in the array and performs this.
-        // Should remove the enemy from the array also when it's disposed.
+        //checks if the player's attack bounds are within the enemies area on the map
         if (playerAttackBounds.overlaps(enemyBounds) && isPlayerAttacking){
             enemy.modifyHealth(-(player.getDamage()));
-            if (enemy.getHealth() <= 0){
+            if (enemy.getHealth() <= 0){ //if the enemy dies
                 enemy.setIsAlive(false);
                 enemy.dispose();
-                checkEnemyDeath(enemy);
+                checkEnemyDeath(enemy); // checks if the enemy is dead or not and increments kill count of player.
             }
         }
     }
+
+    // checks to see if the player has killed an enemy and updates the kill counter if it does.
     private void checkEnemyDeath(GameEntity enemy){
         if (!enemy.getIsAlive() && !enemy.getDeathHandled()){
             enemy.setDeathHandled(true);
