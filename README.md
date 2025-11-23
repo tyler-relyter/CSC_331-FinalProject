@@ -4,6 +4,16 @@ A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://git
 
 This is a 2D top-down style java game using libGDX as a game library. The game map is a 2D orthogonal tiled map created with the Tiled map editor using open source assets from Kenney (https://kenney.nl/assets). 
 Build using Gradle and run the application. 
+
+
+## Collaborators
+
+- `amcnutt1996`: Greg McNutt (https://github.com/amcnutt1996)
+- `pchachicho`: Patrick Hachicho (https://github.com/pchachicho)
+- `bpmarsee0327`: Bennet P. Marsee (https://github.com/bpmarsee0327)
+- `tyler-relyter`: Tyler Bullard (https://github.com/tyler-relyter)
+
+  
 ## Platforms
 
 - `core`: Main module with the application logic shared by all platforms.
