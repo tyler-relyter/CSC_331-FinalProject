@@ -153,8 +153,8 @@ public class GameScreen extends ScreenAdapter {
         }
 
 
-        // Example game progression: when player has killed five enemies, unlock a gate.
-        if (!gatesUnlocked && player.getKillCount() == 5) {
+        // Example game progression: when player has killed all enemies, unlock boss gate.
+        if (!gatesUnlocked && player.getKillCount() == (entities.size - 1)) { //minus 1 to not count the boss
             gameMap.unlockBossGate();
             gatesUnlocked = true;
         }
