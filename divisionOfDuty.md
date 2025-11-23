@@ -2,7 +2,7 @@ Tyler - TileMap and collisions
 
 Patrick - Enemy class and asset
 
-Greg - Player animations
+Greg - Player animations / Integrating player into game logic
 
 Bennett - GUI with start button/ End screen
 
@@ -10,14 +10,16 @@ Bennett - GUI with start button/ End screen
 
 CURRENT TODO:
 
-Finish attacking and damge
+[x] Finish attacking and damge
 
-Killing enemy takes them away somehow
+[x] Killing enemy takes them away somehow
 
-Map tiles converted to normal floor images
+[x] Map tiles converted to normal floor images
 
-End Screen("Congrats You Escaped") or something
+[x] End Screen("Congrats You Escaped") or something
 
-Controls to go on start screen (Arrow Keys Move, Space bar attacks)
+[ ] Controls to go on start screen (Arrow Keys Move, Space bar attacks)
 
-Put enemy where they need to go
+[x] Put enemies where they need to go
+
+[ ] Optional: add an audio file
