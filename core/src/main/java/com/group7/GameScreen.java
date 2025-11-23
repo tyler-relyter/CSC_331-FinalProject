@@ -44,6 +44,7 @@ public class GameScreen extends ScreenAdapter {
     // Player and a sample enemy instance.
     private Player player;
     private BasicEnemy enemy;
+    private BossEnemy boss;
 
     // Container for additional entities that should be updated / rendered.
     private Array<GameEntity> entities;
@@ -131,7 +132,8 @@ public class GameScreen extends ScreenAdapter {
         }
 
         //create boss enemy and add it to entities
-        entities.add(new BossEnemy(280, 77, player));
+        boss = new BossEnemy(280, 77, player);
+        entities.add(boss);
 
 
         // Initialize damage logic; keeps combat rules outside of entities themselves.
@@ -190,6 +192,11 @@ public class GameScreen extends ScreenAdapter {
             }
         }
         spriteBatch.end();
+
+        //Check if the game is over
+        if (!boss.getIsAlive()){
+            game.setScreen(new EndGUI(game));
+        }
 
         /// removed for polish, Re-add to show players attack bounds.
 //        // Debug: draw the player's attack rectangle using ShapeRenderer.
