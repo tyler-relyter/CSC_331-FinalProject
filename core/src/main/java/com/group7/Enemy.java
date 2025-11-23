@@ -7,8 +7,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class Enemy implements GameEntity {
-
-
     protected Vector2 position;
     protected Vector2 velocity;
     protected float width;
@@ -30,8 +28,8 @@ public abstract class Enemy implements GameEntity {
         this.position = new Vector2(x, y);
         this.velocity = new Vector2(0, 0);
         this.speed = 60f;      // a bit slower than the player so it feels fair
-        this.width = 15f;
-        this.height = 15f;
+        this.width = 35f;
+        this.height = 30f;
 
         this.health = 100f;
         this.isAlive = true;

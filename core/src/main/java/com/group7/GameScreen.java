@@ -44,6 +44,7 @@ public class GameScreen extends ScreenAdapter {
     // Player and a sample enemy instance.
     private Player player;
     private BasicEnemy enemy;
+    private BossEnemy boss;
 
     // Container for additional entities that should be updated / rendered.
     private Array<GameEntity> entities;
@@ -105,15 +106,38 @@ public class GameScreen extends ScreenAdapter {
 
         // Create a basic enemy positioned offset from player, give it the player
         // reference so it can chase / target the player.
-        enemy = new BasicEnemy(worldWidth / 2f + 20f, worldHeight / 2f, player);
+        enemy = new BasicEnemy(worldWidth / 2f + 20f, worldHeight / 2f, player, "Enemys/bluefire.png");
         // Provide map to enemy so it can use the same collision info.
         enemy.setMap(gameMap);
 
-        // Add the enemy to the update/draw list.
-        entities.add(enemy);
+        //set coordinates for each enemy that will be placed on the map
+        int[][] enemyCoords = {
+            {350,280}, // knight in top right
+            {75, 353}, // wizard in top left
+            {37, 188}, // wizard in middle left
+            {179, 120}, // dog in middle
+            {141, 286} // knight in top left
+        };
+        // paths to enemy images
+        String[] enemyPaths = {
+            "Enemys/enemy1.png", //knight
+            "Enemys/enemy2.png", //wizard
+            "Enemys/enemy2.png",
+            "Enemys/enemy3.png", //dog
+            "Enemys/enemy1.png",
+        };
+        //create and add each enemy with their location set.
+        for (int i = 0; i < 5; i++){
+           entities.add(new BasicEnemy(enemyCoords[i][0], enemyCoords[i][1], player, enemyPaths[i]));
+        }
+
+        //create boss enemy and add it to entities
+        boss = new BossEnemy(280, 77, player);
+        entities.add(boss);
+
 
         // Initialize damage logic; keeps combat rules outside of entities themselves.
-        gameDamageLogic = new DamageLogic(player, enemy);
+        gameDamageLogic = new DamageLogic(player, entities);
     }
 
     /**
@@ -124,10 +148,13 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         // Update damage resolution logic (checks attacks, health, etc).
-        gameDamageLogic.update();
+        for (GameEntity e:entities){
+            gameDamageLogic.update(e);
+        }
 
-        // Example game progression: when player has killed one enemy, unlock a gate.
-        if (!gatesUnlocked && player.getKillCount() == 1) {
+
+        // Example game progression: when player has killed all enemies, unlock boss gate.
+        if (!gatesUnlocked && player.getKillCount() == (entities.size - 1)) { //minus 1 to not count the boss
             gameMap.unlockBossGate();
             gatesUnlocked = true;
         }
@@ -166,20 +193,26 @@ public class GameScreen extends ScreenAdapter {
         }
         spriteBatch.end();
 
-        // Debug: draw the player's attack rectangle using ShapeRenderer.
-        // Note: allocating a ShapeRenderer per frame should be removed after testing as this is a severe memory leak.
-        ShapeRenderer tempRect = new ShapeRenderer();
-        tempRect.begin(ShapeRenderer.ShapeType.Line);
-        tempRect.setColor(Color.WHITE);
-        tempRect.setProjectionMatrix(camera.combined);
-        // Get player's attack bounds and draw the rectangle.
-        float x = player.playerAttackBounds.x;
-        float y = player.playerAttackBounds.y;
-        float w = player.playerAttackBounds.width;
-        float h = player.playerAttackBounds.height;
-        tempRect.rect(x, y, w, h);
-        tempRect.end();
-        tempRect.dispose();
+        //Check if the game is over
+        if (!boss.getIsAlive()){
+            game.setScreen(new EndGUI(game));
+        }
+
+        /// removed for polish, Re-add to show players attack bounds.
+//        // Debug: draw the player's attack rectangle using ShapeRenderer.
+//        // Note: allocating a ShapeRenderer per frame should be removed after testing as this is a severe memory leak.
+//        ShapeRenderer tempRect = new ShapeRenderer();
+//        tempRect.begin(ShapeRenderer.ShapeType.Line);
+//        tempRect.setColor(Color.WHITE);
+//        tempRect.setProjectionMatrix(camera.combined);
+//        // Get player's attack bounds and draw the rectangle.
+//        float x = player.playerAttackBounds.x;
+//        float y = player.playerAttackBounds.y;
+//        float w = player.playerAttackBounds.width;
+//        float h = player.playerAttackBounds.height;
+//        tempRect.rect(x, y, w, h);
+//        tempRect.end();
+//        tempRect.dispose();
     }
 
     /**
