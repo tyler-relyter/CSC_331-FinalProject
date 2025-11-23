@@ -1,9 +1,9 @@
-# FinalProjectGame
+# Idle Knight Escape
 
 A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
 
-This project was generated with a template including simple application launchers and an `ApplicationAdapter` extension that draws libGDX logo.
-
+This is a 2D top-down style java game using libGDX as a game library. The game map is a 2D orthogonal tiled map created with the Tiled map editor using open source assets from Kenney (https://kenney.nl/assets). 
+Build using Gradle and run the application. 
 ## Platforms
 
 - `core`: Main module with the application logic shared by all platforms.
