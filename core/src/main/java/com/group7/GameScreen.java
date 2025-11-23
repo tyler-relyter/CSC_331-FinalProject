@@ -109,11 +109,24 @@ public class GameScreen extends ScreenAdapter {
         // Provide map to enemy so it can use the same collision info.
         enemy.setMap(gameMap);
 
+        //set coordinates for each enemy that will be placed on the map
+        int[][] enemyCoords = {
+            {350,292},
+            {81, 353},
+            {37, 188},
+            {179, 120},
+            {141, 286}
+        };
+        //create and add each enemy with their location set.
+        for (int i = 0; i < 5; i++){
+           entities.add(new BasicEnemy(enemyCoords[i][0], enemyCoords[i][1], player));
+        }
+
         // Add the enemy to the update/draw list.
-        entities.add(enemy);
+//        entities.add(enemy);
 
         // Initialize damage logic; keeps combat rules outside of entities themselves.
-        gameDamageLogic = new DamageLogic(player, enemy);
+        gameDamageLogic = new DamageLogic(player, entities);
     }
 
     /**
@@ -124,7 +137,10 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         // Update damage resolution logic (checks attacks, health, etc).
-        gameDamageLogic.update();
+        for (GameEntity e:entities){
+            gameDamageLogic.update(e);
+        }
+
 
         // Example game progression: when player has killed one enemy, unlock a gate.
         if (!gatesUnlocked && player.getKillCount() == 1) {

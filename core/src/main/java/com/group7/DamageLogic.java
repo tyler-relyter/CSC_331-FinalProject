@@ -1,20 +1,22 @@
 package com.group7;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 
 public class DamageLogic {
     private final Player player;
-    private final GameEntity enemy;
 
     // checks the logic between the players attack box bounds and the enemy bounds to see if it overlaps.
     // if it does, damage the enemy and set the health. If it dies remove it from the game screen and add
     // a kill count to the player.
-    public DamageLogic(Player player, GameEntity enemy) {
-        this.player = player; // player class that is on game screen
-        this.enemy = enemy; // single enemy on game screen **This needs to be changed to array to check all enemies**
-        // when more enemies are added this will have to be modified to add the enemy arrays to the logic.
+    public DamageLogic(Player player, Array<GameEntity> enemies) {
+        this.player = player;// player class that is on game screen
+
+        for (GameEntity e: enemies) {
+            update(e);
+        }
     }
-    public void update() {
+    public void update(GameEntity enemy) {
         boolean isPlayerAttacking = player.isAttacking();
         Rectangle playerAttackBounds = player.getPlayerAttackBounds();
         Rectangle enemyBounds = enemy.getBounds();
@@ -26,11 +28,11 @@ public class DamageLogic {
             if (enemy.getHealth() <= 0){
                 enemy.setIsAlive(false);
                 enemy.dispose();
-                checkEnemyDeath();
+                checkEnemyDeath(enemy);
             }
         }
     }
-    private void checkEnemyDeath(){
+    private void checkEnemyDeath(GameEntity enemy){
         if (!enemy.getIsAlive() && !enemy.getDeathHandled()){
             enemy.setDeathHandled(true);
             player.incrementKillCounter();

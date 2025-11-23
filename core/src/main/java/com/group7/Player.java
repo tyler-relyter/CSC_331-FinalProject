@@ -394,7 +394,6 @@ public class Player {
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
             // attack action (stops walking)
-
             this.isWalking = false;
             this.isAttacking = true;
         }
