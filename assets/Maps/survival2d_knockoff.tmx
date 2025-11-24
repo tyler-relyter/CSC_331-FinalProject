@@ -3,11 +3,11 @@
  <tileset firstgid="1" source="dungeon2d_tiles.tsx"/>
  <layer id="1" name="Ground" width="65" height="65">
   <data encoding="base64" compression="zlib">
-   eJztm8lOwzAQhs2BKw8AD8NWFomlVTkArQTHgFi6ICRUXh5bZISxPPYkHW+VD7+cuBO783kmseO2EUI0iFZS11IHUocEHUldSn052oR2fTaxNUXqgIHya+HRh2ZbIgOlU6k3qff2WI8D5ddcauaRyQDYjo1zk4E+BuPA9TYt23GEcmHUgV8+/20MXHGAtfHAXP9kyGY7IPrVlcFNy/9M6rUtp229iwG3KAx8/g2lRlLPhP7AVsXQY1u+GCXU58rA5qca0zGxv3HkMY4VB31EuX+WzAD8o+RGDurKYN3xs13PFRPHUveBFCIXQmgoaHPVroK5bajvzZkv6t58ZVGDHJs25mdwTnn2qxgcaCUW76Ydpc0+DBrh9hfjY7u2ITIAG58t1W5GtPExwHwyx91XYt9Fj2GXb98JGPhyQD9W89Jz8bdesMXGunGgcmBPahuxw54JfRj01Q7DeOi+3Qn8+TJxsCqJgW3cwGYodSJ+nydQHhp1ow1g4LKhvPNYEdqcZ8pg7lAfBq6c0fMmJwZd4gDeC8A7J3gnAAxUzlDmZ6MCGcD5o8VGr8Pmc6ZirbG5GPhiO7Vcc04OBtTYTilXXnEwMO+FtrkoJvNzlz3FFrvelVdcDFxzcd+c3eUv5rdtrefqNwaDvv5g6zhfTHVZB8VmQB03arxTcyp1LiwLUUgGpYvKYGsD9dmWu0QGqcdKV+y9iRwZxFZlUBlUBnwMsD2wrvsHffrgEMf7HMVx3yLO+ML6oOiCYFM6g9s1+JTI4EDkuecak4Fqk7K26iKOe2JlUBmkYMDVpt52ZVAZVAZhGXDuy0wKZRBClUG+DIYijz21lAxi/h8lxF51ZVAZcDHIZT8pJYPSVRlUBpVBZVAZ/GeQ++/uQgvWpFT59iso+xkc/YToM3SbKfvJpd/c9QNRwl9q
+   eJztm9tuHCEMhulFb/MA7cM0PaitlKYbTS7SNlFzOanSwyZRpShPX5CwQpFtDGtYiLj4xQzjgfGHmeGwuxpjVkIPVp+tDq1eC/TG6pPVPVMmlJuyaa1zIg8YOL9uEroLbEdk4PTe6pfVb38cxoHza2v1J6GYwYVPl+g8ZhC2wVI5H9Otb0dIb6I88CvlP8aAiwOqjO/K+VeRMNt3Qr9yGZx6/h+sfvr03OdzDLQlYZDyb2N1YvVDUB/Yuhi69Ol1lEJ+rwwwP12bLsL6lsZt3CoOSiR5f47MAPyT9I0elMtg1/bD7teKibdWXyupRl+ooY2RjVVzBWPbWs+t2V/cu/kY0UocxzbxNTiXfPvDGHRjCSreY7tUmSkbisFqeH8pPti9q5CBs3nlxdmC3ZGwzNz4ixlQPsXtnkqpZwljWOqblNWuDFJ9IDx249KP5nG+gMXGrnHg+sBLq+eEHfVNKGFQqgOF9gh9+2Lo78s3htVIDLB2CxlINTKDVBxwOhIy2HbKYMsofCeGPp8xPLg+A/2mNwYaccAxKekvPTLI9TFlPyIDyXsgh0uqv+SIG3NqMNiYOnMVTZ1UZhCvj2JjUUrxdc5eYkvdz61daTHgxuKpMTvnr9RvyF+Ielsw2NUfbI5TyhTLa8kA5iGwTh4/D6ydwxwF9mywa6HCMrn8YyK/NoNbRNdEvtNl4TWqTGl+TQajS8rg2RPUX5++EDLYd1uFar030SOD1poMJoPJQI8BtQeWu39QUoeGNNZzHEds/qwZXyVrmjlzew0GtddIXB3Umkzu2s7IDFyZh6bPPVeMwVklBq5Mbg5bIo13Yss4mAwmA8l+dmnZmgzCd3StOOidQYu+MBmMxUBzDwX29UdikLP3lGM/EgMNYWPgXhlsTB97avtk0PL/KDV+D74vBhfm8T8tT4kB7PmcJs6dwv2nnHt7ZZDaS4rPOUnu7ZHB6JoMJoPJYDKYDP5noDm/G1Hhb8015ne580WNcrTqrF3mPuvppd7e9Q8sOFPC
   </data>
  </layer>
  <objectgroup id="2" name="Object">
-  <object id="11" gid="28" x="207.512" y="239.302" width="16" height="16"/>
+  <object id="11" gid="28" x="206" y="239.3" width="16" height="16"/>
   <object id="12" gid="35" x="214.992" y="237.917" width="14.338" height="13.7839"/>
   <object id="43" gid="7" x="15.2305" y="590.7" width="17.6593" height="16">
    <properties>
@@ -96,7 +96,5 @@
   <object id="100" gid="61" x="642.454" y="589.039" width="16" height="16"/>
   <object id="101" gid="61" x="364.518" y="750.269" width="16" height="16"/>
   <object id="102" gid="61" x="643.007" y="749.716" width="16" height="16"/>
-  <object id="103" gid="60" x="307.547" y="342.077" width="16" height="16"/>
-  <object id="104" gid="60" x="156.826" y="341.523" width="16" height="16"/>
  </objectgroup>
 </map>

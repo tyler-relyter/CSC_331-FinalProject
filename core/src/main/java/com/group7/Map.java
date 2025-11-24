@@ -374,6 +374,7 @@ public class Map {
     }
 
     /**
+     * overloaded method
      * Checks if a tile position is blocked
      * @param tileX x coordinate in tile units
      * @param tileY y coordinate in tile units

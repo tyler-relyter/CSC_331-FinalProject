@@ -121,8 +121,8 @@ public abstract class Enemy implements GameEntity {
         float right = this.position.x + this.width;
         float bottom = this.position.y;
         float top = this.position.y + this.height;
-        float centerX = this.position.x + this.width * 0.5f;
-        float centerY = this.position.y + this.height * 0.5f;
+        float centerX = this.position.x + this.width * 0.5f; // halfway point X
+        float centerY = this.position.y + this.height * 0.5f;  // halfway point Y
 
         float[] samples = new float[] {
             left, bottom,
