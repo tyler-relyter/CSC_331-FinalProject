@@ -78,6 +78,9 @@ public class EndGUI implements Screen {
         table.add(playButton).padBottom(20).row(); //start button
         table.add(exitButton); //exit button
 
+        // Stop music when the end screen becomes active
+        game.stopMusic();
+
         // Button actions
         playButton.addListener(new ChangeListener() {
             @Override

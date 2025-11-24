@@ -1,6 +1,8 @@
 package com.group7;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 
 /**
  Main entry point for the LibGDX application.
@@ -8,6 +10,7 @@ import com.badlogic.gdx.Game;
  application listener that manages a single Screen instance at a time.
 */
 public class MainEntry extends Game {
+    private Music bgMusic;
 
     /**
      create()
@@ -18,11 +21,36 @@ public class MainEntry extends Game {
     */
     @Override
     public void create() {
+        // Load music from assets
+        bgMusic = Gdx.audio.newMusic(Gdx.files.internal("Audio/menu_theme.mp3"));
+        bgMusic.setLooping(true); // loop background music
+
         // Instantiate and show the start/menu screen as the first screen.
         // Pass this Game instance so the StartGUI can switch to other screens.
         setScreen(new StartGUI(this));
     }
 
+    // Called by GameScreen to start/resume music
+    public void playMusic() {
+        if (bgMusic != null && !bgMusic.isPlaying()) {
+            bgMusic.play();
+        }
+    }
+
+    // Called by EndGUI to stop music
+    public void stopMusic() {
+        if (bgMusic != null && bgMusic.isPlaying()) {
+            bgMusic.stop();
+        }
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        if (bgMusic != null) {
+            bgMusic.dispose();
+        }
+    }
     /**
      createGameScreen()
      - Optional factory method that StartGUI (or any other UI) can call

@@ -138,6 +138,9 @@ public class GameScreen extends ScreenAdapter {
 
         // Initialize damage logic; keeps combat rules outside of entities themselves.
         gameDamageLogic = new DamageLogic(player, entities);
+
+        // Starts the music
+        game.playMusic();
     }
 
     /**
