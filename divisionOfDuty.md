@@ -18,8 +18,8 @@ CURRENT TODO:
 
 - [x] End Screen("Congrats You Escaped") or something
 
-- [ ] Controls to go on start screen (Arrow Keys Move, Space bar attacks)
+- [x] Controls to go on start screen (Arrow Keys Move, Space bar attacks)
 
 - [x] Put enemies where they need to go
 
-- [ ] Optional: add an audio file
+- [x] Optional: add an audio file
